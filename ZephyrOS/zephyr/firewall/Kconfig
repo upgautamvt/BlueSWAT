@@ -1,0 +1,10 @@
+
+menu "Device Drivers"
+
+config USE_PERIPHERAL_FILTER
+	bool
+	default y
+	help
+		Enable the use of the peripheral filter.
+
+endmenu
