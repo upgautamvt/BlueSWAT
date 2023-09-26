@@ -1,0 +1,51 @@
+# NUCLEO-64 F401RE board configuration
+
+# Copyright (c) 2016 Linaro Limited.
+# Copyright (c) 2019 Centaur Analytics, Inc
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_NUCLEO_F401RE
+
+config BOARD
+	default "nucleo_f401re"
+
+config UART_2
+	default y
+	depends on UART_CONSOLE
+
+config I2C_1
+	default y
+	depends on I2C
+
+if SPI
+
+config SPI_1
+	default y
+
+config SPI_2
+	default y
+
+config SPI_STM32_INTERRUPT
+	default y
+
+endif # SPI
+
+config PWM_STM32_2
+	default y
+	depends on PWM
+
+if WATCHDOG
+
+config WWDG_STM32
+	default y
+
+config IWDG_STM32
+	default n
+
+endif # WATCHDOG
+
+config ADC_1
+	default y
+	depends on ADC
+
+endif # BOARD_NUCLEO_F401RE

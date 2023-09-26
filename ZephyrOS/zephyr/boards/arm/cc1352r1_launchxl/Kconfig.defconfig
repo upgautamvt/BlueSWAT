@@ -1,0 +1,15 @@
+# TI CC1352R LaunchXL board
+
+# Copyright (c) 2019 Brett Witherspoon
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_CC1352R1_LAUNCHXL
+
+config BOARD
+	default "cc1352r1_launchxl"
+
+config SPI_0
+	default y
+	depends on SPI
+
+endif # BOARD_CC1352R1_LAUNCHXL
