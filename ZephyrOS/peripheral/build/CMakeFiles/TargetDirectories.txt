@@ -165,6 +165,11 @@
 /root/BlueSWAT/ZephyrOS/peripheral/build/zephyr/drivers/entropy/CMakeFiles/drivers__entropy.dir
 /root/BlueSWAT/ZephyrOS/peripheral/build/zephyr/drivers/timer/CMakeFiles/rebuild_cache.dir
 /root/BlueSWAT/ZephyrOS/peripheral/build/zephyr/drivers/timer/CMakeFiles/edit_cache.dir
+/root/BlueSWAT/ZephyrOS/peripheral/build/zephyr/firewall/CMakeFiles/rebuild_cache.dir
+/root/BlueSWAT/ZephyrOS/peripheral/build/zephyr/firewall/CMakeFiles/edit_cache.dir
+/root/BlueSWAT/ZephyrOS/peripheral/build/zephyr/firewall/libebpf/CMakeFiles/rebuild_cache.dir
+/root/BlueSWAT/ZephyrOS/peripheral/build/zephyr/firewall/libebpf/CMakeFiles/edit_cache.dir
+/root/BlueSWAT/ZephyrOS/peripheral/build/zephyr/firewall/libebpf/CMakeFiles/firewall__libebpf.dir
 /root/BlueSWAT/ZephyrOS/peripheral/build/modules/atmel/CMakeFiles/rebuild_cache.dir
 /root/BlueSWAT/ZephyrOS/peripheral/build/modules/atmel/CMakeFiles/edit_cache.dir
 /root/BlueSWAT/ZephyrOS/peripheral/build/modules/atmel/asf/CMakeFiles/rebuild_cache.dir

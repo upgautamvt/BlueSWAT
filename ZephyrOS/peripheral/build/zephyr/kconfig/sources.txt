@@ -421,6 +421,7 @@
 /root/BlueSWAT/ZephyrOS/zephyr/ext/lib/crypto/Kconfig
 /root/BlueSWAT/ZephyrOS/zephyr/ext/lib/crypto/tinycrypt/Kconfig
 /root/BlueSWAT/ZephyrOS/zephyr/ext/lib/fnmatch/Kconfig
+/root/BlueSWAT/ZephyrOS/zephyr/firewall/Kconfig
 /root/BlueSWAT/ZephyrOS/zephyr/kernel/Kconfig
 /root/BlueSWAT/ZephyrOS/zephyr/kernel/Kconfig.power_mgmt
 /root/BlueSWAT/ZephyrOS/zephyr/lib/Kconfig

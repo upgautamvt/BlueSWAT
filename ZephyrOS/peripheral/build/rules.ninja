@@ -451,6 +451,25 @@ rule C_STATIC_LIBRARY_LINKER__drivers__entropy
 #############################################
 # Rule for compiling C files.
 
+rule C_COMPILER__firewall__libebpf
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ccache /root/SDK/zephyr-sdk-0.11.2/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out   -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER__firewall__libebpf
+  command = $PRE_LINK && ccache /usr/bin/cmake -E remove $TARGET_FILE && ccache /root/SDK/zephyr-sdk-0.11.2/arm-zephyr-eabi/bin/arm-zephyr-eabi-ar qc $TARGET_FILE $LINK_FLAGS $in && ccache /root/SDK/zephyr-sdk-0.11.2/arm-zephyr-eabi/bin/arm-zephyr-eabi-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
 rule C_COMPILER__.2e.2e__modules__hal__nordic
   depfile = $DEP_FILE
   deps = gcc
