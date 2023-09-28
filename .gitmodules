@@ -1,0 +1,3 @@
+[submodule "Mynewt/mynewt-core"]
+	path = Mynewt/mynewt-core
+	url = https://github.com/apache/mynewt-core.git
