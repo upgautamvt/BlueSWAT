@@ -10,7 +10,7 @@ To flash USB device from WSL2, please install [usbipd](https://learn.microsoft.c
 
 Download our code:
 ```
-git clone https://github.com/RayCxggg/BlueSWAT_BLE.git
+git clone --recursive https://github.com/RayCxggg/BlueSWAT_BLE.git
 ```
 
 In a Windows shell, connect the board and attach it to WSL2:
