@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     /* Initialize all packages. */
     sysinit();
 
-    console_printf("Hello, world!\n");
+    // console_printf("Hello, world!\n");
 
     /* As the last thing, process events from default event queue. */
     while (1)
