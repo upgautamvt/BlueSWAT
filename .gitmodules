@@ -8,6 +8,7 @@
 [submodule "Mynewt/mbedtls"]
 	path = Mynewt/repos/mbedtls
 	url = https://github.com/ARMmbed/mbedtls.git
+    commit = aeb97a18913a86f051afab11b2c92c6be0c2eb83
 [submodule "Mynewt/mcuboot"]
 	path = Mynewt/repos/mcuboot
 	url = https://github.com/runtimeco/mcuboot.git
