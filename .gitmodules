@@ -14,4 +14,10 @@
 [submodule "Mynewt/nordic-nrfx"]
 	path = Mynewt/repos/nordic-nrfx
 	url = https://github.com/NordicSemiconductor/nrfx.git
+[submodule "Mynewt/littlefs"]
+    path = Mynewt/repos/littlefs
+    url = https://github.com/ARMmbed/littlefs.git
+[submodule "Mynewt/lvgl"]
+    path = Mynewt/repos/lvgl
+    url = https://github.com/lvgl/lvgl.git
   
