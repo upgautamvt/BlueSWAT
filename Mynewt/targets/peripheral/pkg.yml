@@ -1,4 +1,4 @@
-pkg.name: targets/ble_tgt
+pkg.name: targets/peripheral
 pkg.type: target
 pkg.description: 
 pkg.author: 

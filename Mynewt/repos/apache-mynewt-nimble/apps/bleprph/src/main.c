@@ -64,7 +64,7 @@ bleprph_print_conn_desc(struct ble_gap_conn_desc *desc)
                 desc->peer_id_addr.type);
     print_addr(desc->peer_id_addr.val);
     MODLOG_DFLT(INFO, " conn_itvl=%d conn_latency=%d supervision_timeout=%d "
-                "encrypted=%d authenticated=%d bonded=%d\n",
+                      "encrypted=%d authenticated=%d bonded=%d\n",
                 desc->conn_itvl, desc->conn_latency,
                 desc->supervision_timeout,
                 desc->sec_state.encrypted,
@@ -88,7 +88,8 @@ bleprph_advertise(void)
 
     /* Figure out address to use while advertising (no privacy for now) */
     rc = ble_hs_id_infer_auto(0, &own_addr_type);
-    if (rc != 0) {
+    if (rc != 0)
+    {
         MODLOG_DFLT(ERROR, "error determining address type; rc=%d\n", rc);
         return;
     }
@@ -123,13 +124,13 @@ bleprph_advertise(void)
     fields.name_is_complete = 1;
 
     fields.uuids16 = (ble_uuid16_t[]){
-        BLE_UUID16_INIT(GATT_SVR_SVC_ALERT_UUID)
-    };
+        BLE_UUID16_INIT(GATT_SVR_SVC_ALERT_UUID)};
     fields.num_uuids16 = 1;
     fields.uuids16_is_complete = 1;
 
     rc = ble_gap_adv_set_fields(&fields);
-    if (rc != 0) {
+    if (rc != 0)
+    {
         MODLOG_DFLT(ERROR, "error setting advertisement data; rc=%d\n", rc);
         return;
     }
@@ -140,7 +141,8 @@ bleprph_advertise(void)
     adv_params.disc_mode = BLE_GAP_DISC_MODE_GEN;
     rc = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER,
                            &adv_params, bleprph_gap_event, NULL);
-    if (rc != 0) {
+    if (rc != 0)
+    {
         MODLOG_DFLT(ERROR, "error enabling advertisement; rc=%d\n", rc);
         return;
     }
@@ -161,19 +163,20 @@ bleprph_advertise(void)
  *                                  of the return code is specific to the
  *                                  particular GAP event being signalled.
  */
-static int
-bleprph_gap_event(struct ble_gap_event *event, void *arg)
+static int bleprph_gap_event(struct ble_gap_event *event, void *arg)
 {
     struct ble_gap_conn_desc desc;
     int rc;
 
-    switch (event->type) {
+    switch (event->type)
+    {
     case BLE_GAP_EVENT_CONNECT:
         /* A new connection was established or a connection attempt failed. */
         MODLOG_DFLT(INFO, "connection %s; status=%d ",
                     event->connect.status == 0 ? "established" : "failed",
                     event->connect.status);
-        if (event->connect.status == 0) {
+        if (event->connect.status == 0)
+        {
             rc = ble_gap_conn_find(event->connect.conn_handle, &desc);
             assert(rc == 0);
             bleprph_print_conn_desc(&desc);
@@ -184,7 +187,8 @@ bleprph_gap_event(struct ble_gap_event *event, void *arg)
         }
         MODLOG_DFLT(INFO, "\n");
 
-        if (event->connect.status != 0) {
+        if (event->connect.status != 0)
+        {
             /* Connection failed; resume advertising. */
             bleprph_advertise();
         }
@@ -343,7 +347,8 @@ main_fn(int argc, char **argv)
     {
         void *entry;
         rc = split_app_go(&entry, true);
-        if (rc == 0) {
+        if (rc == 0)
+        {
             hal_system_start(entry);
         }
     }
@@ -352,17 +357,17 @@ main_fn(int argc, char **argv)
     /*
      * As the last thing, process events from default event queue.
      */
-    while (1) {
+    while (1)
+    {
         os_eventq_run(os_eventq_dflt_get());
     }
     return 0;
 }
 
-int
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 #if BABBLESIM
-    extern void bsim_init(int argc, char** argv, void *main_fn);
+    extern void bsim_init(int argc, char **argv, void *main_fn);
     bsim_init(argc, argv, main_fn);
 #else
     main_fn(argc, argv);
