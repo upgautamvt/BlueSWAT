@@ -1,0 +1,33 @@
+#ifndef FSM_HANDLE_H
+#define FSM_HANDLE_H
+
+#include "fsm_core.h"
+
+// whether to use JIT interpretation
+#define JIT_OFF 0
+#define JIT_ON 1
+
+void ifw_fsm_enable(bool jit);
+
+#define IFW_LL_PACKET_PARSER(link, rx)                                         \
+	(ifw_ll_packet_parser_rx(link, rx) == IFW_OPERATION_REJECT)
+
+#define IFW_L2CAP_PACKET_PARSER(conn, buf)                                     \
+	(ifw_l2cap_packet_parser_recv(conn, buf) == IFW_OPERATION_REJECT)
+
+// #define IFW_INVALID_RELEASE(hdr, lll, link, rx)                                \
+// 	ifw_invalid_release(hdr, lll, link, rx)
+
+#define IFW_FSM_CHECK_UPDATE(state, type, class)                               \
+	(ifw_fsm_check_update(state, type, class) == IFW_UPDATE_ERROR)
+
+#define IFW_RUN_VERIFIER(type, class)                                          \
+	(ifw_run_verifier(type, class) == IFW_OPERATION_REJECT)
+
+#define IFW_FSM_STATE_UPDATE(state, type, class)                               \
+	(ifw_fsm_state_update(state, type, class) == IFW_UPDATE_ERROR)
+
+// extern void bt_le_adv_resume(void);
+// extern void ll_reset(void);
+
+#endif // FSM_HANDLE_H
