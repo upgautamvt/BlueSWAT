@@ -88,12 +88,12 @@ Now, build the bootloader and BLE targets:
 ```
 cd BlueSWAT/Mynewt
 newt build nrf52_boot
-newt build ble_tgt
+newt build peripheral
 ```
 
 Run the `newt create-image` command to create and sign the application image. You may assign an arbitrary version (e.g. 1.0.0) to the image:
 ```
-newt create-image ble_tgt 1.0.0
+newt create-image peripheral 1.0.0
 ```
 
 Connect a micro-USB cable from your computer to the micro-USB port on the nRF52-DK board. 
@@ -101,7 +101,7 @@ Connect a micro-USB cable from your computer to the micro-USB port on the nRF52-
 Then, load the bootloader and the BLE application image onto the board:
 ```
 newt load nrf52_boot
-newt load ble_tgt
+newt load peripheral
 ```
 
 ### Monitor
