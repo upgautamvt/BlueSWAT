@@ -43,6 +43,9 @@
 /* Application-specified header. */
 #include "bleprph.h"
 
+// BlueSWAT header
+#include "fsm_core.h"
+
 static int bleprph_gap_event(struct ble_gap_event *event, void *arg);
 
 /**
@@ -77,9 +80,10 @@ bleprph_print_conn_desc(struct ble_gap_conn_desc *desc)
  *     o General discoverable mode.
  *     o Undirected connectable mode.
  */
-static void
-bleprph_advertise(void)
+static void bleprph_advertise(void)
 {
+    MODLOG_DFLT(INFO, "advertising\n");
+
     uint8_t own_addr_type;
     struct ble_gap_adv_params adv_params;
     struct ble_hs_adv_fields fields;
@@ -234,7 +238,7 @@ static int bleprph_gap_event(struct ble_gap_event *event, void *arg)
         return 0;
 
     case BLE_GAP_EVENT_SUBSCRIBE:
-        MODLOG_DFLT(INFO, "subscribe event; conn_handle=%d attr_handle=%d "
+        MODLOG_DFLT(INFO, "subscribe event from bleprph_gap_event; conn_handle=%d attr_handle=%d "
                           "reason=%d prevn=%d curn=%d previ=%d curi=%d\n",
                     event->subscribe.conn_handle,
                     event->subscribe.attr_handle,
@@ -246,7 +250,7 @@ static int bleprph_gap_event(struct ble_gap_event *event, void *arg)
         return 0;
 
     case BLE_GAP_EVENT_MTU:
-        MODLOG_DFLT(INFO, "mtu update event; conn_handle=%d cid=%d mtu=%d\n",
+        MODLOG_DFLT(INFO, "mtu update event from bleprph_gap_event; conn_handle=%d cid=%d mtu=%d\n",
                     event->mtu.conn_handle,
                     event->mtu.channel_id,
                     event->mtu.value);
@@ -309,6 +313,8 @@ bleprph_on_sync(void)
 static int
 main_fn(int argc, char **argv)
 {
+    MODLOG_DFLT(INFO, "bleprph starting\n");
+
 #if MYNEWT_VAL(BLE_SVC_DIS_FIRMWARE_REVISION_READ_PERM) >= 0
     struct image_version ver;
     static char ver_str[IMGMGR_NMGR_MAX_VER];
@@ -366,6 +372,8 @@ main_fn(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+    MODLOG_DFLT(INFO, "Hello, world!\n");
+
 #if BABBLESIM
     extern void bsim_init(int argc, char **argv, void *main_fn);
     bsim_init(argc, argv, main_fn);

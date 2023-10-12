@@ -64,6 +64,8 @@
 #include <controller/ble_ll_ext.h>
 #endif
 
+#include "modlog/modlog.h"
+
 /* XXX:
  *
  * 1) use the sanity task!
@@ -84,282 +86,283 @@ int8_t g_ble_ll_rx_power_compensation;
 
 /* Supported states */
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER)
-#define BLE_LL_S_NCA                    ((uint64_t)1 << 0)
-#define BLE_LL_S_SA                     ((uint64_t)1 << 1)
+#define BLE_LL_S_NCA ((uint64_t)1 << 0)
+#define BLE_LL_S_SA ((uint64_t)1 << 1)
 #else
-#define BLE_LL_S_NCA                    ((uint64_t)0 << 0)
-#define BLE_LL_S_SA                     ((uint64_t)0 << 1)
+#define BLE_LL_S_NCA ((uint64_t)0 << 0)
+#define BLE_LL_S_SA ((uint64_t)0 << 1)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-#define BLE_LL_S_CA                     ((uint64_t)1 << 2)
-#define BLE_LL_S_HDCA                   ((uint64_t)1 << 3)
+#define BLE_LL_S_CA ((uint64_t)1 << 2)
+#define BLE_LL_S_HDCA ((uint64_t)1 << 3)
 #else
-#define BLE_LL_S_CA                     ((uint64_t)0 << 2)
-#define BLE_LL_S_HDCA                   ((uint64_t)0 << 3)
+#define BLE_LL_S_CA ((uint64_t)0 << 2)
+#define BLE_LL_S_HDCA ((uint64_t)0 << 3)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-#define BLE_LL_S_PS                     ((uint64_t)1 << 4)
-#define BLE_LL_S_AS                     ((uint64_t)1 << 5)
+#define BLE_LL_S_PS ((uint64_t)1 << 4)
+#define BLE_LL_S_AS ((uint64_t)1 << 5)
 #else
-#define BLE_LL_S_PS                     ((uint64_t)0 << 4)
-#define BLE_LL_S_AS                     ((uint64_t)0 << 5)
+#define BLE_LL_S_PS ((uint64_t)0 << 4)
+#define BLE_LL_S_AS ((uint64_t)0 << 5)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
-#define BLE_LL_S_INIT                   ((uint64_t)1 << 6)
+#define BLE_LL_S_INIT ((uint64_t)1 << 6)
 #else
-#define BLE_LL_S_INIT                   ((uint64_t)0 << 6)
+#define BLE_LL_S_INIT ((uint64_t)0 << 6)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-#define BLE_LL_S_PERIPH                 ((uint64_t)1 << 7)
+#define BLE_LL_S_PERIPH ((uint64_t)1 << 7)
 #else
-#define BLE_LL_S_PERIPH                  ((uint64_t)0 << 7)
+#define BLE_LL_S_PERIPH ((uint64_t)0 << 7)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER) && MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-#define BLE_LL_S_NCA_PS                 ((uint64_t)1 << 8)
-#define BLE_LL_S_SA_PS                  ((uint64_t)1 << 9)
+#define BLE_LL_S_NCA_PS ((uint64_t)1 << 8)
+#define BLE_LL_S_SA_PS ((uint64_t)1 << 9)
 #else
-#define BLE_LL_S_NCA_PS                 ((uint64_t)0 << 8)
-#define BLE_LL_S_SA_PS                  ((uint64_t)0 << 9)
+#define BLE_LL_S_NCA_PS ((uint64_t)0 << 8)
+#define BLE_LL_S_SA_PS ((uint64_t)0 << 9)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) && MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-#define BLE_LL_S_CA_PS                  ((uint64_t)1 << 10)
-#define BLE_LL_S_HDCA_PS                ((uint64_t)1 << 11)
+#define BLE_LL_S_CA_PS ((uint64_t)1 << 10)
+#define BLE_LL_S_HDCA_PS ((uint64_t)1 << 11)
 #else
-#define BLE_LL_S_CA_PS                  ((uint64_t)0 << 10)
-#define BLE_LL_S_HDCA_PS                ((uint64_t)0 << 11)
+#define BLE_LL_S_CA_PS ((uint64_t)0 << 10)
+#define BLE_LL_S_HDCA_PS ((uint64_t)0 << 11)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER) && MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-#define BLE_LL_S_NCA_AS                 ((uint64_t)1 << 12)
-#define BLE_LL_S_SA_AS                  ((uint64_t)1 << 13)
+#define BLE_LL_S_NCA_AS ((uint64_t)1 << 12)
+#define BLE_LL_S_SA_AS ((uint64_t)1 << 13)
 #else
-#define BLE_LL_S_NCA_AS                 ((uint64_t)0 << 12)
-#define BLE_LL_S_SA_AS                  ((uint64_t)0 << 13)
+#define BLE_LL_S_NCA_AS ((uint64_t)0 << 12)
+#define BLE_LL_S_SA_AS ((uint64_t)0 << 13)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) && MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-#define BLE_LL_S_CA_AS                  ((uint64_t)1 << 14)
-#define BLE_LL_S_HDCA_AS                ((uint64_t)1 << 15)
+#define BLE_LL_S_CA_AS ((uint64_t)1 << 14)
+#define BLE_LL_S_HDCA_AS ((uint64_t)1 << 15)
 #else
-#define BLE_LL_S_CA_AS                  ((uint64_t)0 << 14)
-#define BLE_LL_S_HDCA_AS                ((uint64_t)0 << 15)
+#define BLE_LL_S_CA_AS ((uint64_t)0 << 14)
+#define BLE_LL_S_HDCA_AS ((uint64_t)0 << 15)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER) && MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
-#define BLE_LL_S_NCA_INIT               ((uint64_t)1 << 16)
-#define BLE_LL_S_SA_INIT                ((uint64_t)1 << 17)
-#define BLE_LL_S_NCA_CENTRAL            ((uint64_t)1 << 18)
-#define BLE_LL_S_SA_CENTRAL             ((uint64_t)1 << 19)
+#define BLE_LL_S_NCA_INIT ((uint64_t)1 << 16)
+#define BLE_LL_S_SA_INIT ((uint64_t)1 << 17)
+#define BLE_LL_S_NCA_CENTRAL ((uint64_t)1 << 18)
+#define BLE_LL_S_SA_CENTRAL ((uint64_t)1 << 19)
 #else
-#define BLE_LL_S_NCA_INIT               ((uint64_t)0 << 16)
-#define BLE_LL_S_SA_INIT                ((uint64_t)0 << 17)
-#define BLE_LL_S_NCA_CENTRAL             ((uint64_t)0 << 18)
-#define BLE_LL_S_SA_CENTRAL              ((uint64_t)0 << 19)
+#define BLE_LL_S_NCA_INIT ((uint64_t)0 << 16)
+#define BLE_LL_S_SA_INIT ((uint64_t)0 << 17)
+#define BLE_LL_S_NCA_CENTRAL ((uint64_t)0 << 18)
+#define BLE_LL_S_SA_CENTRAL ((uint64_t)0 << 19)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER) && MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-#define BLE_LL_S_NCA_PERIPH             ((uint64_t)1 << 20)
-#define BLE_LL_S_SA_PERIPH               ((uint64_t)1 << 21)
+#define BLE_LL_S_NCA_PERIPH ((uint64_t)1 << 20)
+#define BLE_LL_S_SA_PERIPH ((uint64_t)1 << 21)
 #else
-#define BLE_LL_S_NCA_PERIPH              ((uint64_t)0 << 20)
-#define BLE_LL_S_SA_PERIPH               ((uint64_t)0 << 21)
+#define BLE_LL_S_NCA_PERIPH ((uint64_t)0 << 20)
+#define BLE_LL_S_SA_PERIPH ((uint64_t)0 << 21)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_OBSERVER) && MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
 /* We do not support passive scanning while initiating yet */
-#define BLE_LL_S_PS_INIT                ((uint64_t)0 << 22)
+#define BLE_LL_S_PS_INIT ((uint64_t)0 << 22)
 /* We do not support active scanning while initiating yet */
-#define BLE_LL_S_AS_INIT                ((uint64_t)0 << 23)
-#define BLE_LL_S_PS_CENTRAL             ((uint64_t)1 << 24)
-#define BLE_LL_S_AS_CENTRAL             ((uint64_t)1 << 25)
+#define BLE_LL_S_AS_INIT ((uint64_t)0 << 23)
+#define BLE_LL_S_PS_CENTRAL ((uint64_t)1 << 24)
+#define BLE_LL_S_AS_CENTRAL ((uint64_t)1 << 25)
 #else
-#define BLE_LL_S_PS_INIT                ((uint64_t)0 << 22)
-#define BLE_LL_S_AS_INIT                ((uint64_t)0 << 23)
-#define BLE_LL_S_PS_CENTRAL              ((uint64_t)0 << 24)
-#define BLE_LL_S_AS_CENTRAL              ((uint64_t)0 << 25)
+#define BLE_LL_S_PS_INIT ((uint64_t)0 << 22)
+#define BLE_LL_S_AS_INIT ((uint64_t)0 << 23)
+#define BLE_LL_S_PS_CENTRAL ((uint64_t)0 << 24)
+#define BLE_LL_S_AS_CENTRAL ((uint64_t)0 << 25)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_OBSERVER) && MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-#define BLE_LL_S_PS_PERIPH              ((uint64_t)1 << 26)
-#define BLE_LL_S_AS_PERIPH              ((uint64_t)1 << 27)
+#define BLE_LL_S_PS_PERIPH ((uint64_t)1 << 26)
+#define BLE_LL_S_AS_PERIPH ((uint64_t)1 << 27)
 #else
-#define BLE_LL_S_PS_PERIPH               ((uint64_t)0 << 26)
-#define BLE_LL_S_AS_PERIPH               ((uint64_t)0 << 27)
+#define BLE_LL_S_PS_PERIPH ((uint64_t)0 << 26)
+#define BLE_LL_S_AS_PERIPH ((uint64_t)0 << 27)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
-#define BLE_LL_S_INIT_CENTRAL           ((uint64_t)1 << 28)
+#define BLE_LL_S_INIT_CENTRAL ((uint64_t)1 << 28)
 #else
-#define BLE_LL_S_INIT_CENTRAL            ((uint64_t)0 << 28)
+#define BLE_LL_S_INIT_CENTRAL ((uint64_t)0 << 28)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-#define BLE_LL_S_LDCA                   ((uint64_t)1 << 29)
+#define BLE_LL_S_LDCA ((uint64_t)1 << 29)
 #else
-#define BLE_LL_S_LDCA                   ((uint64_t)0 << 29)
+#define BLE_LL_S_LDCA ((uint64_t)0 << 29)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) && MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-#define BLE_LL_S_LDCA_PS                ((uint64_t)1 << 30)
-#define BLE_LL_S_LDCA_AS                ((uint64_t)1 << 31)
+#define BLE_LL_S_LDCA_PS ((uint64_t)1 << 30)
+#define BLE_LL_S_LDCA_AS ((uint64_t)1 << 31)
 #else
-#define BLE_LL_S_LDCA_PS                ((uint64_t)0 << 30)
-#define BLE_LL_S_LDCA_AS                ((uint64_t)0 << 31)
+#define BLE_LL_S_LDCA_PS ((uint64_t)0 << 30)
+#define BLE_LL_S_LDCA_AS ((uint64_t)0 << 31)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) && MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
-#define BLE_LL_S_CA_INIT                ((uint64_t)1 << 32)
-#define BLE_LL_S_HDCA_INIT              ((uint64_t)1 << 33)
-#define BLE_LL_S_LDCA_INIT              ((uint64_t)1 << 34)
-#define BLE_LL_S_CA_CENTRAL             ((uint64_t)1 << 35)
-#define BLE_LL_S_HDCA_CENTRAL           ((uint64_t)1 << 36)
-#define BLE_LL_S_LDCA_CENTRAL           ((uint64_t)1 << 37)
+#define BLE_LL_S_CA_INIT ((uint64_t)1 << 32)
+#define BLE_LL_S_HDCA_INIT ((uint64_t)1 << 33)
+#define BLE_LL_S_LDCA_INIT ((uint64_t)1 << 34)
+#define BLE_LL_S_CA_CENTRAL ((uint64_t)1 << 35)
+#define BLE_LL_S_HDCA_CENTRAL ((uint64_t)1 << 36)
+#define BLE_LL_S_LDCA_CENTRAL ((uint64_t)1 << 37)
 #else
-#define BLE_LL_S_CA_INIT                ((uint64_t)0 << 32)
-#define BLE_LL_S_HDCA_INIT              ((uint64_t)0 << 33)
-#define BLE_LL_S_LDCA_INIT              ((uint64_t)0 << 34)
-#define BLE_LL_S_CA_CENTRAL              ((uint64_t)0 << 35)
-#define BLE_LL_S_HDCA_CENTRAL            ((uint64_t)0 << 36)
-#define BLE_LL_S_LDCA_CENTRAL            ((uint64_t)0 << 37)
+#define BLE_LL_S_CA_INIT ((uint64_t)0 << 32)
+#define BLE_LL_S_HDCA_INIT ((uint64_t)0 << 33)
+#define BLE_LL_S_LDCA_INIT ((uint64_t)0 << 34)
+#define BLE_LL_S_CA_CENTRAL ((uint64_t)0 << 35)
+#define BLE_LL_S_HDCA_CENTRAL ((uint64_t)0 << 36)
+#define BLE_LL_S_LDCA_CENTRAL ((uint64_t)0 << 37)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-#define BLE_LL_S_CA_PERIPH              ((uint64_t)1 << 38)
-#define BLE_LL_S_HDCA_PERIPH            ((uint64_t)1 << 39)
-#define BLE_LL_S_LDCA_PERIPH            ((uint64_t)1 << 40)
+#define BLE_LL_S_CA_PERIPH ((uint64_t)1 << 38)
+#define BLE_LL_S_HDCA_PERIPH ((uint64_t)1 << 39)
+#define BLE_LL_S_LDCA_PERIPH ((uint64_t)1 << 40)
 #else
-#define BLE_LL_S_CA_PERIPH               ((uint64_t)0 << 38)
-#define BLE_LL_S_HDCA_PERIPH             ((uint64_t)0 << 39)
-#define BLE_LL_S_LDCA_PERIPH             ((uint64_t)0 << 40)
+#define BLE_LL_S_CA_PERIPH ((uint64_t)0 << 38)
+#define BLE_LL_S_HDCA_PERIPH ((uint64_t)0 << 39)
+#define BLE_LL_S_LDCA_PERIPH ((uint64_t)0 << 40)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) && MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
-#define BLE_LL_S_INIT_PERIPH            ((uint64_t)1 << 41)
+#define BLE_LL_S_INIT_PERIPH ((uint64_t)1 << 41)
 #else
-#define BLE_LL_S_INIT_PERIPH             ((uint64_t)0 << 41)
+#define BLE_LL_S_INIT_PERIPH ((uint64_t)0 << 41)
 #endif
 
-#define BLE_LL_SUPPORTED_STATES             \
-(                                           \
-    BLE_LL_S_NCA                    |       \
-    BLE_LL_S_SA                     |       \
-    BLE_LL_S_CA                     |       \
-    BLE_LL_S_HDCA                   |       \
-    BLE_LL_S_PS                     |       \
-    BLE_LL_S_AS                     |       \
-    BLE_LL_S_INIT                   |       \
-    BLE_LL_S_PERIPH                  |       \
-    BLE_LL_S_NCA_PS                 |       \
-    BLE_LL_S_SA_PS                  |       \
-    BLE_LL_S_CA_PS                  |       \
-    BLE_LL_S_HDCA_PS                |       \
-    BLE_LL_S_NCA_AS                 |       \
-    BLE_LL_S_SA_AS                  |       \
-    BLE_LL_S_CA_AS                  |       \
-    BLE_LL_S_HDCA_AS                |       \
-    BLE_LL_S_NCA_INIT               |       \
-    BLE_LL_S_SA_INIT                |       \
-    BLE_LL_S_NCA_CENTRAL             |       \
-    BLE_LL_S_SA_CENTRAL              |       \
-    BLE_LL_S_NCA_PERIPH              |       \
-    BLE_LL_S_SA_PERIPH               |       \
-    BLE_LL_S_PS_INIT                |       \
-    BLE_LL_S_AS_INIT                |       \
-    BLE_LL_S_PS_CENTRAL              |       \
-    BLE_LL_S_AS_CENTRAL              |       \
-    BLE_LL_S_PS_PERIPH               |       \
-    BLE_LL_S_AS_PERIPH               |       \
-    BLE_LL_S_INIT_CENTRAL            |       \
-    BLE_LL_S_LDCA                   |       \
-    BLE_LL_S_LDCA_PS                |       \
-    BLE_LL_S_LDCA_AS                |       \
-    BLE_LL_S_CA_INIT                |       \
-    BLE_LL_S_HDCA_INIT              |       \
-    BLE_LL_S_LDCA_INIT              |       \
-    BLE_LL_S_CA_CENTRAL              |       \
-    BLE_LL_S_HDCA_CENTRAL            |       \
-    BLE_LL_S_LDCA_CENTRAL            |       \
-    BLE_LL_S_CA_PERIPH               |       \
-    BLE_LL_S_HDCA_PERIPH             |       \
-    BLE_LL_S_LDCA_PERIPH             |       \
-    BLE_LL_S_INIT_PERIPH)
+#define BLE_LL_SUPPORTED_STATES \
+    (                           \
+        BLE_LL_S_NCA |          \
+        BLE_LL_S_SA |           \
+        BLE_LL_S_CA |           \
+        BLE_LL_S_HDCA |         \
+        BLE_LL_S_PS |           \
+        BLE_LL_S_AS |           \
+        BLE_LL_S_INIT |         \
+        BLE_LL_S_PERIPH |       \
+        BLE_LL_S_NCA_PS |       \
+        BLE_LL_S_SA_PS |        \
+        BLE_LL_S_CA_PS |        \
+        BLE_LL_S_HDCA_PS |      \
+        BLE_LL_S_NCA_AS |       \
+        BLE_LL_S_SA_AS |        \
+        BLE_LL_S_CA_AS |        \
+        BLE_LL_S_HDCA_AS |      \
+        BLE_LL_S_NCA_INIT |     \
+        BLE_LL_S_SA_INIT |      \
+        BLE_LL_S_NCA_CENTRAL |  \
+        BLE_LL_S_SA_CENTRAL |   \
+        BLE_LL_S_NCA_PERIPH |   \
+        BLE_LL_S_SA_PERIPH |    \
+        BLE_LL_S_PS_INIT |      \
+        BLE_LL_S_AS_INIT |      \
+        BLE_LL_S_PS_CENTRAL |   \
+        BLE_LL_S_AS_CENTRAL |   \
+        BLE_LL_S_PS_PERIPH |    \
+        BLE_LL_S_AS_PERIPH |    \
+        BLE_LL_S_INIT_CENTRAL | \
+        BLE_LL_S_LDCA |         \
+        BLE_LL_S_LDCA_PS |      \
+        BLE_LL_S_LDCA_AS |      \
+        BLE_LL_S_CA_INIT |      \
+        BLE_LL_S_HDCA_INIT |    \
+        BLE_LL_S_LDCA_INIT |    \
+        BLE_LL_S_CA_CENTRAL |   \
+        BLE_LL_S_HDCA_CENTRAL | \
+        BLE_LL_S_LDCA_CENTRAL | \
+        BLE_LL_S_CA_PERIPH |    \
+        BLE_LL_S_HDCA_PERIPH |  \
+        BLE_LL_S_LDCA_PERIPH |  \
+        BLE_LL_S_INIT_PERIPH)
 
 /* The global BLE LL data object */
 struct ble_ll_obj g_ble_ll_data;
 
 /* Global link layer statistics */
-STATS_SECT_DECL(ble_ll_stats) ble_ll_stats;
+STATS_SECT_DECL(ble_ll_stats)
+ble_ll_stats;
 STATS_NAME_START(ble_ll_stats)
-    STATS_NAME(ble_ll_stats, hci_cmds)
-    STATS_NAME(ble_ll_stats, hci_cmd_errs)
-    STATS_NAME(ble_ll_stats, hci_events_sent)
-    STATS_NAME(ble_ll_stats, bad_ll_state)
-    STATS_NAME(ble_ll_stats, bad_acl_hdr)
-    STATS_NAME(ble_ll_stats, no_bufs)
-    STATS_NAME(ble_ll_stats, rx_adv_pdu_crc_ok)
-    STATS_NAME(ble_ll_stats, rx_adv_pdu_crc_err)
-    STATS_NAME(ble_ll_stats, rx_adv_bytes_crc_ok)
-    STATS_NAME(ble_ll_stats, rx_adv_bytes_crc_err)
-    STATS_NAME(ble_ll_stats, rx_data_pdu_crc_ok)
-    STATS_NAME(ble_ll_stats, rx_data_pdu_crc_err)
-    STATS_NAME(ble_ll_stats, rx_data_bytes_crc_ok)
-    STATS_NAME(ble_ll_stats, rx_data_bytes_crc_err)
-    STATS_NAME(ble_ll_stats, rx_adv_malformed_pkts)
-    STATS_NAME(ble_ll_stats, rx_adv_ind)
-    STATS_NAME(ble_ll_stats, rx_adv_direct_ind)
-    STATS_NAME(ble_ll_stats, rx_adv_nonconn_ind)
-    STATS_NAME(ble_ll_stats, rx_adv_ext_ind)
-    STATS_NAME(ble_ll_stats, rx_scan_reqs)
-    STATS_NAME(ble_ll_stats, rx_scan_rsps)
-    STATS_NAME(ble_ll_stats, rx_connect_reqs)
-    STATS_NAME(ble_ll_stats, rx_scan_ind)
-    STATS_NAME(ble_ll_stats, rx_aux_connect_rsp)
-    STATS_NAME(ble_ll_stats, adv_txg)
-    STATS_NAME(ble_ll_stats, adv_late_starts)
-    STATS_NAME(ble_ll_stats, adv_resched_pdu_fail)
-    STATS_NAME(ble_ll_stats, adv_drop_event)
-    STATS_NAME(ble_ll_stats, sched_state_conn_errs)
-    STATS_NAME(ble_ll_stats, sched_state_adv_errs)
-    STATS_NAME(ble_ll_stats, scan_starts)
-    STATS_NAME(ble_ll_stats, scan_stops)
-    STATS_NAME(ble_ll_stats, scan_req_txf)
-    STATS_NAME(ble_ll_stats, scan_req_txg)
-    STATS_NAME(ble_ll_stats, scan_rsp_txg)
-    STATS_NAME(ble_ll_stats, aux_missed_adv)
-    STATS_NAME(ble_ll_stats, aux_scheduled)
-    STATS_NAME(ble_ll_stats, aux_received)
-    STATS_NAME(ble_ll_stats, aux_fired_for_read)
-    STATS_NAME(ble_ll_stats, aux_allocated)
-    STATS_NAME(ble_ll_stats, aux_freed)
-    STATS_NAME(ble_ll_stats, aux_sched_cb)
-    STATS_NAME(ble_ll_stats, aux_conn_req_tx)
-    STATS_NAME(ble_ll_stats, aux_conn_rsp_tx)
-    STATS_NAME(ble_ll_stats, aux_conn_rsp_err)
-    STATS_NAME(ble_ll_stats, aux_scan_req_tx)
-    STATS_NAME(ble_ll_stats, aux_scan_rsp_err)
-    STATS_NAME(ble_ll_stats, aux_chain_cnt)
-    STATS_NAME(ble_ll_stats, aux_chain_err)
-    STATS_NAME(ble_ll_stats, aux_scan_drop)
-    STATS_NAME(ble_ll_stats, adv_evt_dropped)
-    STATS_NAME(ble_ll_stats, scan_timer_stopped)
-    STATS_NAME(ble_ll_stats, scan_timer_restarted)
-    STATS_NAME(ble_ll_stats, periodic_adv_drop_event)
-    STATS_NAME(ble_ll_stats, periodic_chain_drop_event)
-    STATS_NAME(ble_ll_stats, sync_event_failed)
-    STATS_NAME(ble_ll_stats, sync_received)
-    STATS_NAME(ble_ll_stats, sync_chain_failed)
-    STATS_NAME(ble_ll_stats, sync_missed_err)
-    STATS_NAME(ble_ll_stats, sync_crc_err)
-    STATS_NAME(ble_ll_stats, sync_rx_buf_err)
-    STATS_NAME(ble_ll_stats, sync_scheduled)
-    STATS_NAME(ble_ll_stats, sched_state_sync_errs)
-    STATS_NAME(ble_ll_stats, sched_invalid_pdu)
+STATS_NAME(ble_ll_stats, hci_cmds)
+STATS_NAME(ble_ll_stats, hci_cmd_errs)
+STATS_NAME(ble_ll_stats, hci_events_sent)
+STATS_NAME(ble_ll_stats, bad_ll_state)
+STATS_NAME(ble_ll_stats, bad_acl_hdr)
+STATS_NAME(ble_ll_stats, no_bufs)
+STATS_NAME(ble_ll_stats, rx_adv_pdu_crc_ok)
+STATS_NAME(ble_ll_stats, rx_adv_pdu_crc_err)
+STATS_NAME(ble_ll_stats, rx_adv_bytes_crc_ok)
+STATS_NAME(ble_ll_stats, rx_adv_bytes_crc_err)
+STATS_NAME(ble_ll_stats, rx_data_pdu_crc_ok)
+STATS_NAME(ble_ll_stats, rx_data_pdu_crc_err)
+STATS_NAME(ble_ll_stats, rx_data_bytes_crc_ok)
+STATS_NAME(ble_ll_stats, rx_data_bytes_crc_err)
+STATS_NAME(ble_ll_stats, rx_adv_malformed_pkts)
+STATS_NAME(ble_ll_stats, rx_adv_ind)
+STATS_NAME(ble_ll_stats, rx_adv_direct_ind)
+STATS_NAME(ble_ll_stats, rx_adv_nonconn_ind)
+STATS_NAME(ble_ll_stats, rx_adv_ext_ind)
+STATS_NAME(ble_ll_stats, rx_scan_reqs)
+STATS_NAME(ble_ll_stats, rx_scan_rsps)
+STATS_NAME(ble_ll_stats, rx_connect_reqs)
+STATS_NAME(ble_ll_stats, rx_scan_ind)
+STATS_NAME(ble_ll_stats, rx_aux_connect_rsp)
+STATS_NAME(ble_ll_stats, adv_txg)
+STATS_NAME(ble_ll_stats, adv_late_starts)
+STATS_NAME(ble_ll_stats, adv_resched_pdu_fail)
+STATS_NAME(ble_ll_stats, adv_drop_event)
+STATS_NAME(ble_ll_stats, sched_state_conn_errs)
+STATS_NAME(ble_ll_stats, sched_state_adv_errs)
+STATS_NAME(ble_ll_stats, scan_starts)
+STATS_NAME(ble_ll_stats, scan_stops)
+STATS_NAME(ble_ll_stats, scan_req_txf)
+STATS_NAME(ble_ll_stats, scan_req_txg)
+STATS_NAME(ble_ll_stats, scan_rsp_txg)
+STATS_NAME(ble_ll_stats, aux_missed_adv)
+STATS_NAME(ble_ll_stats, aux_scheduled)
+STATS_NAME(ble_ll_stats, aux_received)
+STATS_NAME(ble_ll_stats, aux_fired_for_read)
+STATS_NAME(ble_ll_stats, aux_allocated)
+STATS_NAME(ble_ll_stats, aux_freed)
+STATS_NAME(ble_ll_stats, aux_sched_cb)
+STATS_NAME(ble_ll_stats, aux_conn_req_tx)
+STATS_NAME(ble_ll_stats, aux_conn_rsp_tx)
+STATS_NAME(ble_ll_stats, aux_conn_rsp_err)
+STATS_NAME(ble_ll_stats, aux_scan_req_tx)
+STATS_NAME(ble_ll_stats, aux_scan_rsp_err)
+STATS_NAME(ble_ll_stats, aux_chain_cnt)
+STATS_NAME(ble_ll_stats, aux_chain_err)
+STATS_NAME(ble_ll_stats, aux_scan_drop)
+STATS_NAME(ble_ll_stats, adv_evt_dropped)
+STATS_NAME(ble_ll_stats, scan_timer_stopped)
+STATS_NAME(ble_ll_stats, scan_timer_restarted)
+STATS_NAME(ble_ll_stats, periodic_adv_drop_event)
+STATS_NAME(ble_ll_stats, periodic_chain_drop_event)
+STATS_NAME(ble_ll_stats, sync_event_failed)
+STATS_NAME(ble_ll_stats, sync_received)
+STATS_NAME(ble_ll_stats, sync_chain_failed)
+STATS_NAME(ble_ll_stats, sync_missed_err)
+STATS_NAME(ble_ll_stats, sync_crc_err)
+STATS_NAME(ble_ll_stats, sync_rx_buf_err)
+STATS_NAME(ble_ll_stats, sync_scheduled)
+STATS_NAME(ble_ll_stats, sched_state_sync_errs)
+STATS_NAME(ble_ll_stats, sched_invalid_pdu)
 STATS_NAME_END(ble_ll_stats)
 
 static void ble_ll_event_rx_pkt(struct ble_npl_event *ev);
@@ -393,7 +396,8 @@ static void
 ble_ll_count_rx_adv_pdus(uint8_t pdu_type)
 {
     /* Count received packet types  */
-    switch (pdu_type) {
+    switch (pdu_type)
+    {
     case BLE_ADV_PDU_TYPE_ADV_EXT_IND:
         STATS_INC(ble_ll_stats, rx_adv_ext_ind);
         break;
@@ -445,11 +449,13 @@ ble_ll_rxpdu_alloc(uint16_t len)
                    "Unaligned om_data");
     _Static_assert(((offsetof(struct os_mbuf, om_data) +
                      sizeof(struct os_mbuf_pkthdr) +
-                     sizeof(struct ble_mbuf_hdr)) & 3) == 0,
+                     sizeof(struct ble_mbuf_hdr)) &
+                    3) == 0,
                    "Unaligned data trailing packet header");
 
     om_ret = os_msys_get_pkthdr(len, sizeof(struct ble_mbuf_hdr));
-    if (!om_ret) {
+    if (!om_ret)
+    {
         goto rxpdu_alloc_fail;
     }
 
@@ -479,9 +485,11 @@ ble_ll_rxpdu_alloc(uint16_t len)
 
     /* Allocate and chain mbufs until there's enough space to store complete PDU */
     om = om_ret;
-    while (rem_len > 0) {
+    while (rem_len > 0)
+    {
         om_next = os_msys_get(rem_len, 0);
-        if (!om_next) {
+        if (!om_next)
+        {
             os_mbuf_free_chain(om_ret);
             goto rxpdu_alloc_fail;
         }
@@ -510,33 +518,35 @@ rxpdu_alloc_fail:
  *
  * @return int
  */
-int
-ble_ll_is_rpa(const uint8_t *addr, uint8_t addr_type)
+int ble_ll_is_rpa(const uint8_t *addr, uint8_t addr_type)
 {
     int rc;
 
-    if (addr_type && ((addr[5] & 0xc0) == 0x40)) {
+    if (addr_type && ((addr[5] & 0xc0) == 0x40))
+    {
         rc = 1;
-    } else {
+    }
+    else
+    {
         rc = 0;
     }
     return rc;
 }
 
-int
-ble_ll_addr_is_id(uint8_t *addr, uint8_t addr_type)
+int ble_ll_addr_is_id(uint8_t *addr, uint8_t addr_type)
 {
     return !addr_type || ((addr[5] & 0xc0) == 0xc0);
 }
 
-int
-ble_ll_addr_subtype(const uint8_t *addr, uint8_t addr_type)
+int ble_ll_addr_subtype(const uint8_t *addr, uint8_t addr_type)
 {
-    if (!addr_type) {
+    if (!addr_type)
+    {
         return BLE_LL_ADDR_SUBTYPE_IDENTITY;
     }
 
-    switch (addr[5] >> 6) {
+    switch (addr[5] >> 6)
+    {
     case 0:
         return BLE_LL_ADDR_SUBTYPE_NRPA; /* NRPA */
     case 1:
@@ -551,8 +561,10 @@ ble_ll_is_valid_addr(const uint8_t *addr)
 {
     int i;
 
-    for (i = 0; i < BLE_DEV_ADDR_LEN; ++i) {
-        if (addr[i]) {
+    for (i = 0; i < BLE_DEV_ADDR_LEN; ++i)
+    {
+        if (addr[i])
+        {
             return 1;
         }
     }
@@ -561,8 +573,7 @@ ble_ll_is_valid_addr(const uint8_t *addr)
 }
 
 /* Checks to see that the device is a valid random address */
-int
-ble_ll_is_valid_random_addr(const uint8_t *addr)
+int ble_ll_is_valid_random_addr(const uint8_t *addr)
 {
     int i;
     int rc;
@@ -571,44 +582,55 @@ ble_ll_is_valid_random_addr(const uint8_t *addr)
 
     /* Make sure all bits are neither one nor zero */
     sum = 0;
-    for (i = 0; i < (BLE_DEV_ADDR_LEN -1); ++i) {
+    for (i = 0; i < (BLE_DEV_ADDR_LEN - 1); ++i)
+    {
         sum += addr[i];
     }
     sum += addr[5] & 0x3f;
 
-    if ((sum == 0) || (sum == ((5*255) + 0x3f))) {
+    if ((sum == 0) || (sum == ((5 * 255) + 0x3f)))
+    {
         return 0;
     }
 
     /* Get the upper two bits of the address */
     rc = 1;
     addr_type = addr[5] & 0xc0;
-    if (addr_type == 0xc0) {
+    if (addr_type == 0xc0)
+    {
         /* Static random address. No other checks needed */
-    } else if (addr_type == 0x40) {
+    }
+    else if (addr_type == 0x40)
+    {
         /* Resolvable */
         sum = addr[3] + addr[4] + (addr[5] & 0x3f);
-        if ((sum == 0) || (sum == (255 + 255 + 0x3f))) {
+        if ((sum == 0) || (sum == (255 + 255 + 0x3f)))
+        {
             rc = 0;
         }
-    } else if (addr_type == 0) {
+    }
+    else if (addr_type == 0)
+    {
         /* non-resolvable. Cant be equal to public */
-        if (!memcmp(g_dev_addr, addr, BLE_DEV_ADDR_LEN)) {
+        if (!memcmp(g_dev_addr, addr, BLE_DEV_ADDR_LEN))
+        {
             rc = 0;
         }
-    } else {
+    }
+    else
+    {
         /* Invalid upper two bits */
         rc = 0;
     }
 
     return rc;
 }
-int
-ble_ll_is_valid_own_addr_type(uint8_t own_addr_type, const uint8_t *random_addr)
+int ble_ll_is_valid_own_addr_type(uint8_t own_addr_type, const uint8_t *random_addr)
 {
     int rc;
 
-    switch (own_addr_type) {
+    switch (own_addr_type)
+    {
     case BLE_HCI_ADV_OWN_ADDR_PUBLIC:
 #if MYNEWT_VAL(BLE_LL_CFG_FEAT_LL_PRIVACY)
     case BLE_HCI_ADV_OWN_ADDR_PRIV_PUB:
@@ -629,8 +651,7 @@ ble_ll_is_valid_own_addr_type(uint8_t own_addr_type, const uint8_t *random_addr)
     return rc;
 }
 
-int
-ble_ll_set_public_addr(const uint8_t *addr)
+int ble_ll_set_public_addr(const uint8_t *addr)
 {
     memcpy(g_dev_addr, addr, BLE_DEV_ADDR_LEN);
 
@@ -647,12 +668,12 @@ ble_ll_set_public_addr(const uint8_t *addr)
  *
  * @return int 0: success
  */
-int
-ble_ll_set_random_addr(const uint8_t *cmdbuf, uint8_t len, bool hci_adv_ext)
+int ble_ll_set_random_addr(const uint8_t *cmdbuf, uint8_t len, bool hci_adv_ext)
 {
-    const struct ble_hci_le_set_rand_addr_cp *cmd = (const void *) cmdbuf;
+    const struct ble_hci_le_set_rand_addr_cp *cmd = (const void *)cmdbuf;
 
-    if (len < sizeof(*cmd)) {
+    if (len < sizeof(*cmd))
+    {
         return BLE_ERR_INV_HCI_CMD_PARMS;
     }
 
@@ -663,19 +684,22 @@ ble_ll_set_random_addr(const uint8_t *cmdbuf, uint8_t len, bool hci_adv_ext)
      */
 
 #if MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
-    if (g_ble_ll_conn_create_sm.connsm) {
+    if (g_ble_ll_conn_create_sm.connsm)
+    {
         return BLE_ERR_CMD_DISALLOWED;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-    if (ble_ll_scan_enabled()){
+    if (ble_ll_scan_enabled())
+    {
         return BLE_ERR_CMD_DISALLOWED;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER)
-    if (!hci_adv_ext && ble_ll_adv_enabled()) {
+    if (!hci_adv_ext && ble_ll_adv_enabled())
+    {
         return BLE_ERR_CMD_DISALLOWED;
     }
 #endif
@@ -705,20 +729,23 @@ ble_ll_set_random_addr(const uint8_t *cmdbuf, uint8_t len, bool hci_adv_ext)
  *
  * @return int 0: not our device address. 1: is our device address
  */
-int
-ble_ll_is_our_devaddr(uint8_t *addr, int addr_type)
+int ble_ll_is_our_devaddr(uint8_t *addr, int addr_type)
 {
     int rc;
     uint8_t *our_addr;
 
-    if (addr_type) {
+    if (addr_type)
+    {
         our_addr = g_random_addr;
-    } else {
+    }
+    else
+    {
         our_addr = g_dev_addr;
     }
 
     rc = 0;
-    if (!memcmp(our_addr, addr, BLE_DEV_ADDR_LEN)) {
+    if (!memcmp(our_addr, addr, BLE_DEV_ADDR_LEN))
+    {
         rc = 1;
     }
 
@@ -732,10 +759,11 @@ ble_ll_is_our_devaddr(uint8_t *addr, int addr_type)
  *
  * @return pointer to identity address of given type.
  */
-uint8_t*
+uint8_t *
 ble_ll_get_our_devaddr(uint8_t addr_type)
 {
-    if (addr_type) {
+    if (addr_type)
+    {
         return g_random_addr;
     }
 
@@ -749,8 +777,7 @@ ble_ll_get_our_devaddr(uint8_t addr_type)
  *
  * @param arg
  */
-void
-ble_ll_wfr_timer_exp(void *arg)
+void ble_ll_wfr_timer_exp(void *arg)
 {
     int rx_start;
     uint8_t lls;
@@ -762,8 +789,10 @@ ble_ll_wfr_timer_exp(void *arg)
                        (uint32_t)rx_start);
 
     /* If we have started a reception, there is nothing to do here */
-    if (!rx_start) {
-        switch (lls) {
+    if (!rx_start)
+    {
+        switch (lls)
+        {
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER)
         case BLE_LL_STATE_ADV:
             ble_ll_adv_wfr_timer_exp();
@@ -825,7 +854,8 @@ ble_ll_tx_pkt_in(void)
     os_sr_t sr;
 
     /* Drain all packets off the queue */
-    while (STAILQ_FIRST(&g_ble_ll_data.ll_tx_pkt_q)) {
+    while (STAILQ_FIRST(&g_ble_ll_data.ll_tx_pkt_q))
+    {
         /* Get mbuf pointer from packet header pointer */
         pkthdr = STAILQ_FIRST(&g_ble_ll_data.ll_tx_pkt_q);
         om = (struct os_mbuf *)((uint8_t *)pkthdr - sizeof(struct os_mbuf));
@@ -842,7 +872,8 @@ ble_ll_tx_pkt_in(void)
 
         /* Do some basic error checking */
         pb = handle & 0x3000;
-        if ((pkthdr->omp_len != length) || (pb > 0x1000) || (length == 0)) {
+        if ((pkthdr->omp_len != length) || (pb > 0x1000) || (length == 0))
+        {
             /* This is a bad ACL packet. Count a stat and free it */
             STATS_INC(ble_ll_stats, bad_acl_hdr);
             os_mbuf_free_chain(om);
@@ -879,25 +910,35 @@ ble_ll_count_rx_stats(struct ble_mbuf_hdr *hdr, uint16_t len, uint8_t pdu_type)
 
 #if MYNEWT_VAL(BLE_LL_DTM)
     /* Reuse connection stats for DTM */
-    if (!connection_data) {
+    if (!connection_data)
+    {
         connection_data = (BLE_MBUF_HDR_RX_STATE(hdr) == BLE_LL_STATE_DTM);
     }
 #endif
 
-    if (crcok) {
-        if (connection_data) {
+    if (crcok)
+    {
+        if (connection_data)
+        {
             STATS_INC(ble_ll_stats, rx_data_pdu_crc_ok);
             STATS_INCN(ble_ll_stats, rx_data_bytes_crc_ok, len);
-        } else {
+        }
+        else
+        {
             STATS_INC(ble_ll_stats, rx_adv_pdu_crc_ok);
             STATS_INCN(ble_ll_stats, rx_adv_bytes_crc_ok, len);
             ble_ll_count_rx_adv_pdus(pdu_type);
         }
-    } else {
-        if (connection_data) {
+    }
+    else
+    {
+        if (connection_data)
+        {
             STATS_INC(ble_ll_stats, rx_data_pdu_crc_err);
             STATS_INCN(ble_ll_stats, rx_data_bytes_crc_err, len);
-        } else {
+        }
+        else
+        {
             STATS_INC(ble_ll_stats, rx_adv_pdu_crc_err);
             STATS_INCN(ble_ll_stats, rx_adv_bytes_crc_err, len);
         }
@@ -915,6 +956,8 @@ ble_ll_count_rx_stats(struct ble_mbuf_hdr *hdr, uint16_t len, uint8_t pdu_type)
 static void
 ble_ll_rx_pkt_in(void)
 {
+    // MODLOG_DFLT(INFO, "ble_ll_rx_pkt_in\n");
+
     os_sr_t sr;
     uint8_t pdu_type;
     uint8_t *rxbuf;
@@ -923,7 +966,8 @@ ble_ll_rx_pkt_in(void)
     struct os_mbuf *m;
 
     /* Drain all packets off the queue */
-    while (STAILQ_FIRST(&g_ble_ll_data.ll_rx_pkt_q)) {
+    while (STAILQ_FIRST(&g_ble_ll_data.ll_rx_pkt_q))
+    {
         /* Get mbuf pointer from packet header pointer */
         pkthdr = STAILQ_FIRST(&g_ble_ll_data.ll_rx_pkt_q);
         m = (struct os_mbuf *)((uint8_t *)pkthdr - sizeof(struct os_mbuf));
@@ -941,7 +985,8 @@ ble_ll_rx_pkt_in(void)
 
         /* Process the data or advertising pdu */
         /* Process the PDU */
-        switch (BLE_MBUF_HDR_RX_STATE(ble_hdr)) {
+        switch (BLE_MBUF_HDR_RX_STATE(ble_hdr))
+        {
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) || MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
         case BLE_LL_STATE_CONNECTION:
             ble_ll_conn_rx_data_pdu(m, ble_hdr);
@@ -984,7 +1029,8 @@ ble_ll_rx_pkt_in(void)
             STATS_INC(ble_ll_stats, bad_ll_state);
             break;
         }
-        if (m) {
+        if (m)
+        {
             /* Free the packet buffer */
             os_mbuf_free_chain(m);
         }
@@ -996,8 +1042,7 @@ ble_ll_rx_pkt_in(void)
  *
  * @param rxpdu Pointer to received PDU
  */
-void
-ble_ll_rx_pdu_in(struct os_mbuf *rxpdu)
+void ble_ll_rx_pdu_in(struct os_mbuf *rxpdu)
 {
     struct os_mbuf_pkthdr *pkthdr;
 
@@ -1012,8 +1057,7 @@ ble_ll_rx_pdu_in(struct os_mbuf *rxpdu)
  *
  * @param txpdu Pointer to transmit packet
  */
-void
-ble_ll_acl_data_in(struct os_mbuf *txpkt)
+void ble_ll_acl_data_in(struct os_mbuf *txpkt)
 {
     os_sr_t sr;
     struct os_mbuf_pkthdr *pkthdr;
@@ -1032,8 +1076,7 @@ ble_ll_acl_data_in(struct os_mbuf *txpkt)
  * Context: Interrupt
  *
  */
-void
-ble_ll_data_buffer_overflow(void)
+void ble_ll_data_buffer_overflow(void)
 {
     ble_ll_event_add(&g_ble_ll_data.ll_dbuf_overflow_ev);
 }
@@ -1044,8 +1087,7 @@ ble_ll_data_buffer_overflow(void)
  *
  * Context: Interrupt
  */
-void
-ble_ll_hw_error(void)
+void ble_ll_hw_error(void)
 {
     ble_npl_callout_reset(&g_ble_ll_data.ll_hw_err_timer, 0);
 }
@@ -1058,14 +1100,15 @@ ble_ll_hw_error(void)
 static void
 ble_ll_hw_err_timer_cb(struct ble_npl_event *ev)
 {
-    if (ble_ll_hci_ev_hw_err(BLE_HW_ERR_HCI_SYNC_LOSS)) {
+    if (ble_ll_hci_ev_hw_err(BLE_HW_ERR_HCI_SYNC_LOSS))
+    {
         /*
          * Restart callout if failed to allocate event. Try to allocate an
          * event every 50 milliseconds (or each OS tick if a tick is longer
          * than 100 msecs).
          */
         ble_npl_callout_reset(&g_ble_ll_data.ll_hw_err_timer,
-                         ble_npl_time_ms_to_ticks32(50));
+                              ble_npl_time_ms_to_ticks32(50));
     }
 }
 
@@ -1082,8 +1125,7 @@ ble_ll_hw_err_timer_cb(struct ble_npl_event *ev)
  *   = 0: Continue to receive frame. Dont go from rx to tx
  *   > 0: Continue to receive frame and go from rx to tx when done
  */
-int
-ble_ll_rx_start(uint8_t *rxbuf, uint8_t chan, struct ble_mbuf_hdr *rxhdr)
+int ble_ll_rx_start(uint8_t *rxbuf, uint8_t chan, struct ble_mbuf_hdr *rxhdr)
 {
     int rc;
     uint8_t pdu_type;
@@ -1094,7 +1136,8 @@ ble_ll_rx_start(uint8_t *rxbuf, uint8_t chan, struct ble_mbuf_hdr *rxhdr)
     ble_ll_trace_u32x2(BLE_LL_TRACE_ID_RX_START, g_ble_ll_data.ll_state,
                        pdu_type);
 
-    switch (g_ble_ll_data.ll_state) {
+    switch (g_ble_ll_data.ll_state)
+    {
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) || MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
     case BLE_LL_STATE_CONNECTION:
         rc = ble_ll_conn_rx_isr_start(rxhdr, ble_phy_access_addr_get());
@@ -1153,8 +1196,7 @@ ble_ll_rx_start(uint8_t *rxbuf, uint8_t chan, struct ble_mbuf_hdr *rxhdr)
  *      == 0: Success. Do not disable the PHY.
  *       > 0: Do not disable PHY as that has already been done.
  */
-int
-ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
+int ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
 {
     int rc;
     int badpkt;
@@ -1174,28 +1216,34 @@ ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
                        rxhdr->rxinfo.flags);
 
 #if MYNEWT_VAL(BLE_LL_EXT)
-    if (BLE_MBUF_HDR_RX_STATE(rxhdr) == BLE_LL_STATE_EXTERNAL) {
+    if (BLE_MBUF_HDR_RX_STATE(rxhdr) == BLE_LL_STATE_EXTERNAL)
+    {
         rc = ble_ll_ext_rx_isr_end(rxbuf, rxhdr);
         return rc;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_DTM)
-    if (BLE_MBUF_HDR_RX_STATE(rxhdr) == BLE_LL_STATE_DTM) {
+    if (BLE_MBUF_HDR_RX_STATE(rxhdr) == BLE_LL_STATE_DTM)
+    {
         rc = ble_ll_dtm_rx_isr_end(rxbuf, rxhdr);
         return rc;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) || MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
-    if (BLE_MBUF_HDR_RX_STATE(rxhdr) == BLE_LL_STATE_CONNECTION) {
+    if (BLE_MBUF_HDR_RX_STATE(rxhdr) == BLE_LL_STATE_CONNECTION)
+    {
+        // MODLOG_DFLT(INFO, "call ble_ll_conn_rx_isr_end from ble_ll_rx_end\n");
+
         rc = ble_ll_conn_rx_isr_end(rxbuf, rxhdr);
         return rc;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_CFG_FEAT_LL_PERIODIC_ADV) && MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-    if (BLE_MBUF_HDR_RX_STATE(rxhdr) == BLE_LL_STATE_SYNC) {
+    if (BLE_MBUF_HDR_RX_STATE(rxhdr) == BLE_LL_STATE_SYNC)
+    {
         rc = ble_ll_sync_rx_isr_end(rxbuf, rxhdr);
         return rc;
     }
@@ -1203,11 +1251,14 @@ ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
 
     /* If the CRC checks, make sure lengths check! */
     badpkt = 0;
-    if (crcok) {
-        switch (pdu_type) {
+    if (crcok)
+    {
+        switch (pdu_type)
+        {
         case BLE_ADV_PDU_TYPE_SCAN_REQ:
         case BLE_ADV_PDU_TYPE_ADV_DIRECT_IND:
-            if (len != BLE_SCAN_REQ_LEN) {
+            if (len != BLE_SCAN_REQ_LEN)
+            {
                 badpkt = 1;
             }
             break;
@@ -1215,7 +1266,8 @@ ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
         case BLE_ADV_PDU_TYPE_ADV_IND:
         case BLE_ADV_PDU_TYPE_ADV_SCAN_IND:
         case BLE_ADV_PDU_TYPE_ADV_NONCONN_IND:
-            if ((len < BLE_DEV_ADDR_LEN) || (len > BLE_ADV_SCAN_IND_MAX_LEN)) {
+            if ((len < BLE_DEV_ADDR_LEN) || (len > BLE_ADV_SCAN_IND_MAX_LEN))
+            {
                 badpkt = 1;
             }
             break;
@@ -1224,7 +1276,8 @@ ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
         case BLE_ADV_PDU_TYPE_ADV_EXT_IND:
             break;
         case BLE_ADV_PDU_TYPE_CONNECT_IND:
-            if (len != BLE_CONNECT_REQ_LEN) {
+            if (len != BLE_CONNECT_REQ_LEN)
+            {
                 badpkt = 1;
             }
             break;
@@ -1234,19 +1287,23 @@ ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
         }
 
         /* If this is a malformed packet, just kill it here */
-        if (badpkt) {
+        if (badpkt)
+        {
             STATS_INC(ble_ll_stats, rx_adv_malformed_pkts);
         }
     }
 
     /* Hand packet to the appropriate state machine (if crc ok) */
     rxpdu = NULL;
-    switch (BLE_MBUF_HDR_RX_STATE(rxhdr)) {
+    switch (BLE_MBUF_HDR_RX_STATE(rxhdr))
+    {
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER)
     case BLE_LL_STATE_ADV:
-        if (!badpkt) {
+        if (!badpkt)
+        {
             rxpdu = ble_ll_rxpdu_alloc(len + BLE_LL_PDU_HDR_LEN);
-            if (rxpdu) {
+            if (rxpdu)
+            {
                 ble_phy_rxpdu_copy(rxbuf, rxpdu);
             }
         }
@@ -1255,9 +1312,11 @@ ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
 #endif
 #if MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
     case BLE_LL_STATE_SCANNING:
-        if (!badpkt) {
+        if (!badpkt)
+        {
             rxpdu = ble_ll_rxpdu_alloc(len + BLE_LL_PDU_HDR_LEN);
-            if (rxpdu) {
+            if (rxpdu)
+            {
                 ble_phy_rxpdu_copy(rxbuf, rxpdu);
             }
         }
@@ -1265,9 +1324,11 @@ ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
         break;
 #if MYNEWT_VAL(BLE_LL_CFG_FEAT_LL_EXT_ADV)
     case BLE_LL_STATE_SCAN_AUX:
-        if (!badpkt) {
+        if (!badpkt)
+        {
             rxpdu = ble_ll_rxpdu_alloc(len + BLE_LL_PDU_HDR_LEN);
-            if (rxpdu) {
+            if (rxpdu)
+            {
                 ble_phy_rxpdu_copy(rxbuf, rxpdu);
             }
         }
@@ -1282,7 +1343,8 @@ ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
     }
 
     /* Hand packet up to higher layer (regardless of CRC failure) */
-    if (rxpdu) {
+    if (rxpdu)
+    {
         ble_ll_rx_pdu_in(rxpdu);
     }
 
@@ -1357,8 +1419,7 @@ ble_ll_event_comp_pkts(struct ble_npl_event *ev)
  *
  * @param arg
  */
-void
-ble_ll_task(void *arg)
+void ble_ll_task(void *arg)
 {
     struct ble_npl_event *ev;
 
@@ -1373,7 +1434,8 @@ ble_ll_task(void *arg)
     /* Tell the host that we are ready to receive packets */
     ble_ll_hci_send_noop();
 
-    while (1) {
+    while (1)
+    {
         ev = ble_npl_eventq_get(&g_ble_ll_data.ll_evq, BLE_NPL_TIME_FOREVER);
         BLE_LL_ASSERT(ev);
         ble_npl_event_run(ev);
@@ -1389,12 +1451,12 @@ ble_ll_task(void *arg)
  *
  * @param ll_state
  */
-void
-ble_ll_state_set(uint8_t ll_state)
+void ble_ll_state_set(uint8_t ll_state)
 {
     g_ble_ll_data.ll_state = ll_state;
 
-    if (ll_state == BLE_LL_STATE_STANDBY) {
+    if (ll_state == BLE_LL_STATE_STANDBY)
+    {
         BLE_LL_DEBUG_GPIO(SCHED_ITEM, 0);
     }
 }
@@ -1421,8 +1483,7 @@ ble_ll_state_get(void)
  *
  * @param ev Event to add to the Link Layer event queue.
  */
-void
-ble_ll_event_add(struct ble_npl_event *ev)
+void ble_ll_event_add(struct ble_npl_event *ev)
 {
     ble_npl_eventq_put(&g_ble_ll_data.ll_evq, ev);
 }
@@ -1434,8 +1495,7 @@ ble_ll_event_add(struct ble_npl_event *ev)
  *
  * @param ev Event to remove from the Link Layer event queue.
  */
-void
-ble_ll_event_remove(struct ble_npl_event *ev)
+void ble_ll_event_remove(struct ble_npl_event *ev)
 {
     ble_npl_eventq_remove(&g_ble_ll_data.ll_evq, ev);
 }
@@ -1467,34 +1527,40 @@ ble_ll_read_supp_features(void)
  *
  * @return HCI command status
  */
-int
-ble_ll_set_host_feat(const uint8_t *cmdbuf, uint8_t len)
+int ble_ll_set_host_feat(const uint8_t *cmdbuf, uint8_t len)
 {
-    const struct ble_hci_le_set_host_feature_cp *cmd = (const void *) cmdbuf;
+    const struct ble_hci_le_set_host_feature_cp *cmd = (const void *)cmdbuf;
     uint64_t mask;
 
-    if (len != sizeof(*cmd)) {
+    if (len != sizeof(*cmd))
+    {
         return BLE_ERR_INV_HCI_CMD_PARMS;
     }
 
 #if MYNEWT_VAL(BLE_LL_ROLE_CENTRAL) || MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-    if (!SLIST_EMPTY(&g_ble_ll_conn_active_list)) {
+    if (!SLIST_EMPTY(&g_ble_ll_conn_active_list))
+    {
         return BLE_ERR_CMD_DISALLOWED;
     }
 #endif
 
-    if ((cmd->bit_num > 0x3F) || (cmd->bit_val > 1)) {
+    if ((cmd->bit_num > 0x3F) || (cmd->bit_val > 1))
+    {
         return BLE_ERR_INV_HCI_CMD_PARMS;
     }
 
     mask = (uint64_t)1 << (cmd->bit_num);
-    if (!(mask & BLE_LL_HOST_CONTROLLED_FEATURES)) {
+    if (!(mask & BLE_LL_HOST_CONTROLLED_FEATURES))
+    {
         return BLE_ERR_UNSUPPORTED;
     }
 
-    if (cmd->bit_val == 0) {
+    if (cmd->bit_val == 0)
+    {
         g_ble_ll_data.ll_supp_features &= ~(mask);
-    } else {
+    }
+    else
+    {
         g_ble_ll_data.ll_supp_features |= mask;
     }
 
@@ -1512,7 +1578,8 @@ ble_ll_flush_pkt_queue(struct ble_ll_pkt_q *pktq)
     struct os_mbuf *om;
 
     /* FLush all packets from Link layer queues */
-    while (STAILQ_FIRST(pktq)) {
+    while (STAILQ_FIRST(pktq))
+    {
         /* Get mbuf pointer from packet header pointer */
         pkthdr = STAILQ_FIRST(pktq);
         om = OS_MBUF_PKTHDR_TO_MBUF(pkthdr);
@@ -1535,8 +1602,7 @@ ble_ll_flush_pkt_queue(struct ble_ll_pkt_q *pktq)
  * @param pdulen
  * @param hdr
  */
-void
-ble_ll_mbuf_init(struct os_mbuf *m, uint8_t pdulen, uint8_t hdr)
+void ble_ll_mbuf_init(struct os_mbuf *m, uint8_t pdulen, uint8_t hdr)
 {
     struct ble_mbuf_hdr *ble_hdr;
 
@@ -1576,8 +1642,7 @@ ble_ll_validate_task(void)
  * @return int The ble error code to place in the command complete event that
  * is returned when this command is issued.
  */
-int
-ble_ll_reset(void)
+int ble_ll_reset(void)
 {
     uint8_t phy_mask;
     int rc;
@@ -1672,7 +1737,6 @@ ble_ll_reset(void)
     ble_ll_resolv_list_reset();
 #endif
 
-
 #if MYNEWT_VAL(BLE_FEM_PA)
     ble_fem_pa_init();
 #endif
@@ -1715,25 +1779,35 @@ ble_ll_pdu_max_tx_octets_get(uint32_t usecs, int phy_mode)
      * see connEffectiveMaxTxTime and connEffectiveMaxRxTime definitions
      */
 
-    if (usecs < header_tx_time) {
+    if (usecs < header_tx_time)
+    {
         return 27;
     }
 
     usecs -= header_tx_time;
 
-    if (phy_mode == BLE_PHY_MODE_1M) {
+    if (phy_mode == BLE_PHY_MODE_1M)
+    {
         /* 8 usecs per byte */
         octets = usecs >> 3;
-    } else if (phy_mode == BLE_PHY_MODE_2M) {
+    }
+    else if (phy_mode == BLE_PHY_MODE_2M)
+    {
         /* 4 usecs per byte */
         octets = usecs >> 2;
-    } else if (phy_mode == BLE_PHY_MODE_CODED_125KBPS) {
+    }
+    else if (phy_mode == BLE_PHY_MODE_CODED_125KBPS)
+    {
         /* S=8 => 8 * 8 = 64 usecs per byte */
         octets = usecs >> 6;
-    } else if (phy_mode == BLE_PHY_MODE_CODED_500KBPS) {
+    }
+    else if (phy_mode == BLE_PHY_MODE_CODED_500KBPS)
+    {
         /* S=2 => 2 * 8 = 16 usecs per byte */
         octets = usecs >> 4;
-    } else {
+    }
+    else
+    {
         BLE_LL_ASSERT(0);
     }
 
@@ -1748,16 +1822,17 @@ ble_ll_is_addr_empty(const uint8_t *addr)
 }
 
 #if MYNEWT_VAL(BLE_LL_HCI_VS_EVENT_ON_ASSERT)
-void
-ble_ll_assert(const char *file, unsigned line)
+void ble_ll_assert(const char *file, unsigned line)
 {
     ble_ll_hci_ev_send_vs_assert(file, line);
 
-    if (hal_debugger_connected()) {
+    if (hal_debugger_connected())
+    {
         __BKPT(0);
     }
 
-    while (1);
+    while (1)
+        ;
 }
 #endif
 
@@ -1785,20 +1860,24 @@ ble_ll_init(void)
     ble_phy_trace_init();
 
     /* Set public device address if not already set */
-    if (ble_ll_is_addr_empty(g_dev_addr)) {
+    if (ble_ll_is_addr_empty(g_dev_addr))
+    {
 #if MYNEWT_VAL(BLE_LL_PUBLIC_DEV_ADDR)
         pub_dev_addr = MYNEWT_VAL(BLE_LL_PUBLIC_DEV_ADDR);
 
-        for (i = 0; i < BLE_DEV_ADDR_LEN; i++) {
+        for (i = 0; i < BLE_DEV_ADDR_LEN; i++)
+        {
             g_dev_addr[i] = pub_dev_addr & 0xff;
             pub_dev_addr >>= 8;
         }
 #else
         memcpy(g_dev_addr, MYNEWT_VAL(BLE_PUBLIC_DEV_ADDR), BLE_DEV_ADDR_LEN);
 #endif
-        if (ble_ll_is_addr_empty(g_dev_addr)) {
+        if (ble_ll_is_addr_empty(g_dev_addr))
+        {
             rc = ble_hw_get_public_addr(&addr);
-            if (!rc) {
+            if (!rc)
+            {
                 memcpy(g_dev_addr, &addr.val[0], BLE_DEV_ADDR_LEN);
             }
         }
@@ -1977,42 +2056,37 @@ ble_ll_init(void)
                  MYNEWT_VAL(BLE_LL_STACK_SIZE));
 #else
 
-/*
- * For non-Mynewt OS it is required that OS creates task for LL and run LL
- * routine which is wrapped by nimble_port_ll_task_func().
- */
+    /*
+     * For non-Mynewt OS it is required that OS creates task for LL and run LL
+     * routine which is wrapped by nimble_port_ll_task_func().
+     */
 
 #endif
 }
 
 /* Transport APIs for LL side */
 
-int
-ble_transport_to_ll_cmd_impl(void *buf)
+int ble_transport_to_ll_cmd_impl(void *buf)
 {
     return ble_ll_hci_cmd_rx(buf);
 }
 
-int
-ble_transport_to_ll_acl_impl(struct os_mbuf *om)
+int ble_transport_to_ll_acl_impl(struct os_mbuf *om)
 {
     return ble_ll_hci_acl_rx(om);
 }
 
-int
-ble_transport_to_ll_iso_impl(struct os_mbuf *om)
+int ble_transport_to_ll_iso_impl(struct os_mbuf *om)
 {
     return ble_ll_hci_iso_rx(om);
 }
 
-void
-ble_transport_ll_init(void)
+void ble_transport_ll_init(void)
 {
     ble_ll_init();
 }
 
-int
-ble_ll_tx_power_round(int tx_power)
+int ble_ll_tx_power_round(int tx_power)
 {
 #if MYNEWT_VAL(BLE_FEM_PA)
 #if MYNEWT_VAL(BLE_FEM_PA_GAIN_TUNABLE)
@@ -2028,8 +2102,7 @@ ble_ll_tx_power_round(int tx_power)
     return tx_power;
 }
 
-void
-ble_ll_tx_power_set(int tx_power)
+void ble_ll_tx_power_set(int tx_power)
 {
 #if MYNEWT_VAL(BLE_FEM_PA)
 #if MYNEWT_VAL(BLE_FEM_PA_GAIN_TUNABLE)
@@ -2046,7 +2119,8 @@ ble_ll_tx_power_set(int tx_power)
     /* If current TX power configuration matches requested one we don't need
      * to update PHY tx power.
      */
-    if (g_ble_ll_tx_power_phy_current == tx_power) {
+    if (g_ble_ll_tx_power_phy_current == tx_power)
+    {
         return;
     }
 
@@ -2054,8 +2128,7 @@ ble_ll_tx_power_set(int tx_power)
     ble_phy_tx_power_set(tx_power);
 }
 
-int
-ble_ll_is_busy(unsigned int flags)
+int ble_ll_is_busy(unsigned int flags)
 {
 #if MYNEWT_VAL(BLE_LL_ROLE_CENTRAL) || MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
     struct ble_ll_conn_sm *cur;
@@ -2063,37 +2136,44 @@ ble_ll_is_busy(unsigned int flags)
 #endif
 
 #if MYNEWT_VAL(BLE_LL_CFG_FEAT_LL_PERIODIC_ADV) && MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-    if (ble_ll_sync_enabled()) {
+    if (ble_ll_sync_enabled())
+    {
         return 1;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER)
-    if (ble_ll_adv_enabled()) {
+    if (ble_ll_adv_enabled())
+    {
         return 1;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_OBSERVER)
-    if (ble_ll_scan_enabled()) {
+    if (ble_ll_scan_enabled())
+    {
         return 1;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
-    if (g_ble_ll_conn_create_sm.connsm) {
+    if (g_ble_ll_conn_create_sm.connsm)
+    {
         return 1;
     }
 #endif
 
 #if MYNEWT_VAL(BLE_LL_ROLE_CENTRAL) || MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-    if (!(flags & BLE_LL_BUSY_EXCLUDE_CONNECTIONS)) {
-        STAILQ_FOREACH(cur, &g_ble_ll_conn_free_list, free_stqe) {
+    if (!(flags & BLE_LL_BUSY_EXCLUDE_CONNECTIONS))
+    {
+        STAILQ_FOREACH(cur, &g_ble_ll_conn_free_list, free_stqe)
+        {
             i++;
         }
 
         /* check if all connection objects are free */
-        if (i < MYNEWT_VAL(BLE_MAX_CONNECTIONS)) {
+        if (i < MYNEWT_VAL(BLE_MAX_CONNECTIONS))
+        {
             return 1;
         }
     }

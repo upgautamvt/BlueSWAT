@@ -8,7 +8,7 @@ BlueSWAT is tested under Ubuntu 20.04 on WSL2. We implement BlueSWAT on [ZephyrO
 
 To flash USB device from WSL2, please install [usbipd](https://learn.microsoft.com/en-us/windows/wsl/connect-usb). Besides, Install the [Segger JLINK Software and documentation pack](https://www.segger.com/downloads/jlink/). 
 
-Download our code:
+Download our code and required submodules of MynewtOS:
 ```
 git clone --recursive https://github.com/RayCxggg/BlueSWAT_BLE.git
 ```
@@ -41,7 +41,7 @@ chmod +x zephyr-sdk-0.11.2-setup.run
 rm zephyr-sdk-0.11.2-setup.run
 ```
 
-Clone related remote repositories:
+Clone required remote repositories:
 ```
 cd BlueSWAT/ZephyrOS/zephyr
 west update

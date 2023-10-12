@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "hal_system.h": "c",
+        "fsm_core.h": "c",
+        "ble.h": "c",
+        "mynewt.h": "c",
+        "console.h": "c",
+        "log.h": "c",
+        "os.h": "c",
+        "sysinit.h": "c",
+        "modlog.h": "c",
+        "ble_ll_rfmgmt.h": "c",
+        "ble_ll_sync.h": "c"
+    }
+}
