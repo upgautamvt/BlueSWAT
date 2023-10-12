@@ -19,7 +19,7 @@ usbipd wsl list
 usbipd wsl attach --busid <busid> 
 ```
 
-## ZephyrOS
+## Zephyr BLE stack
 
 We are using ZephyrOS v2.2.0 for vulnerability reproduction.
 
@@ -75,7 +75,7 @@ sudo minicom -D /dev/ttyACM0
 ```
 
 
-## Mynewt
+## Mynewt NimBLE stack
 
 ### Setup
 
