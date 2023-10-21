@@ -11,5 +11,9 @@
         "modlog.h": "c",
         "ble_ll_rfmgmt.h": "c",
         "ble_ll_sync.h": "c"
-    }
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "none"
 }

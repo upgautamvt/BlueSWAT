@@ -968,6 +968,8 @@ ble_ll_rx_pkt_in(void)
     /* Drain all packets off the queue */
     while (STAILQ_FIRST(&g_ble_ll_data.ll_rx_pkt_q))
     {
+        // MODLOG_DFLT(INFO, "ble_ll_rx_pkt_in: drain\n");
+
         /* Get mbuf pointer from packet header pointer */
         pkthdr = STAILQ_FIRST(&g_ble_ll_data.ll_rx_pkt_q);
         m = (struct os_mbuf *)((uint8_t *)pkthdr - sizeof(struct os_mbuf));
@@ -989,6 +991,8 @@ ble_ll_rx_pkt_in(void)
         {
 #if MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL) || MYNEWT_VAL(BLE_LL_ROLE_CENTRAL)
         case BLE_LL_STATE_CONNECTION:
+            // MODLOG_DFLT(INFO, "ble_ll_rx_pkt_in: BLE_LL_STATE_CONNECTION\n");
+
             ble_ll_conn_rx_data_pdu(m, ble_hdr);
             /* m is going to be free by function above */
             m = NULL;
@@ -1198,6 +1202,9 @@ int ble_ll_rx_start(uint8_t *rxbuf, uint8_t chan, struct ble_mbuf_hdr *rxhdr)
  */
 int ble_ll_rx_end(uint8_t *rxbuf, struct ble_mbuf_hdr *rxhdr)
 {
+    // This MODLOG disables connection from the central. Reason unknown.
+    // MODLOG_DFLT(INFO, "ble_ll_rx_end\n");
+
     int rc;
     int badpkt;
     uint8_t pdu_type;
