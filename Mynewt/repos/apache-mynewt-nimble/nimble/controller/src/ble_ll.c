@@ -64,7 +64,10 @@
 #include <controller/ble_ll_ext.h>
 #endif
 
+// IFW BELOW
 #include "modlog/modlog.h"
+// #include "fsm_handle.h"
+// IFW ABOVE
 
 /* XXX:
  *
@@ -968,8 +971,6 @@ ble_ll_rx_pkt_in(void)
     /* Drain all packets off the queue */
     while (STAILQ_FIRST(&g_ble_ll_data.ll_rx_pkt_q))
     {
-        // MODLOG_DFLT(INFO, "ble_ll_rx_pkt_in: drain\n");
-
         /* Get mbuf pointer from packet header pointer */
         pkthdr = STAILQ_FIRST(&g_ble_ll_data.ll_rx_pkt_q);
         m = (struct os_mbuf *)((uint8_t *)pkthdr - sizeof(struct os_mbuf));
@@ -1000,6 +1001,8 @@ ble_ll_rx_pkt_in(void)
 #endif
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER)
         case BLE_LL_STATE_ADV:
+            // MODLOG_DFLT(INFO, "ble_ll_rx_pkt_in: BLE_LL_STATE_ADV\n");
+
             ble_ll_adv_rx_pkt_in(pdu_type, rxbuf, ble_hdr);
             break;
 #endif

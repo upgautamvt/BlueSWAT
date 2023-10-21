@@ -10,7 +10,9 @@
         "sysinit.h": "c",
         "modlog.h": "c",
         "ble_ll_rfmgmt.h": "c",
-        "ble_ll_sync.h": "c"
+        "ble_ll_sync.h": "c",
+        "regex": "c",
+        "*.ipp": "cpp"
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
