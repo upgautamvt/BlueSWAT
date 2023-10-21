@@ -247,17 +247,17 @@ int ll_init(struct k_sem *sem_rx)
 	// IFW below
 	ifw_fsm_init();
 
-#ifdef CONFIG_USE_PERIPHERAL_FILTER
+	// #ifdef CONFIG_USE_PERIPHERAL_FILTER
 
-	err = IFW_FSM_STATE_UPDATE(IFW_BLE_LL_STANDBY_STATE, LL_STATE, CORE);
-	if (err) {
-		IFW_DEBUG_LOG_UPDATE_ERROR();
-		return err;
-	}
-	IFW_DEBUG_LOG_UPDATE_SUCCESS(
-		"IFW_BLE_LL_STANDBY_STATE, LL_STATE, CORE");
+	// 	err = IFW_FSM_STATE_UPDATE(IFW_BLE_LL_STANDBY_STATE, LL_STATE, CORE);
+	// 	if (err) {
+	// 		IFW_DEBUG_LOG_UPDATE_ERROR();
+	// 		return err;
+	// 	}
+	// 	IFW_DEBUG_LOG_UPDATE_SUCCESS(
+	// 		"IFW_BLE_LL_STANDBY_STATE, LL_STATE, CORE");
 
-#endif
+	// #endif
 	// IFW above
 
 	/* Store the semaphore to be used to wakeup Thread context */
@@ -304,18 +304,18 @@ int ll_init(struct k_sem *sem_rx)
 #if defined(CONFIG_BT_BROADCASTER)
 
 	// IFW below
-#ifdef CONFIG_USE_PERIPHERAL_FILTER
+	// #ifdef CONFIG_USE_PERIPHERAL_FILTER
 
-	err = IFW_FSM_STATE_UPDATE(IFW_BLE_ROLE_BROADCASTER, BLE_ROLE, CORE);
-	if (err) {
-		IFW_DEBUG_LOG_UPDATE_ERROR();
-		return err;
-	}
+	// 	err = IFW_FSM_STATE_UPDATE(IFW_BLE_ROLE_BROADCASTER, BLE_ROLE, CORE);
+	// 	if (err) {
+	// 		IFW_DEBUG_LOG_UPDATE_ERROR();
+	// 		return err;
+	// 	}
 
-	IFW_DEBUG_LOG_UPDATE_SUCCESS(
-		"IFW_BLE_ROLE_BROADCASTER, BLE_ROLE, CORE");
+	// 	IFW_DEBUG_LOG_UPDATE_SUCCESS(
+	// 		"IFW_BLE_ROLE_BROADCASTER, BLE_ROLE, CORE");
 
-#endif
+	// #endif
 	// IFW above
 
 	err = lll_adv_init();
@@ -332,13 +332,13 @@ int ll_init(struct k_sem *sem_rx)
 #if defined(CONFIG_BT_OBSERVER)
 
 	// IFW below
-	err = IFW_FSM_STATE_UPDATE(IFW_BLE_ROLE_OBSERVER, BLE_ROLE, CORE);
-	if (err) {
-		IFW_DEBUG_LOG_UPDATE_ERROR();
-		return err;
-	}
+	// err = IFW_FSM_STATE_UPDATE(IFW_BLE_ROLE_OBSERVER, BLE_ROLE, CORE);
+	// if (err) {
+	// 	IFW_DEBUG_LOG_UPDATE_ERROR();
+	// 	return err;
+	// }
 
-	IFW_DEBUG_LOG_UPDATE_SUCCESS("IFW_BLE_ROLE_OBSERVER, BLE_ROLE, CORE");
+	// IFW_DEBUG_LOG_UPDATE_SUCCESS("IFW_BLE_ROLE_OBSERVER, BLE_ROLE, CORE");
 	// IFW above
 
 	err = lll_scan_init();
@@ -354,31 +354,31 @@ int ll_init(struct k_sem *sem_rx)
 
 #if defined(CONFIG_BT_CONN)
 
-// IFW below
-#ifdef CONFIG_USE_PERIPHERAL_FILTER
-	if (IS_ENABLED(CONFIG_BT_PERIPHERAL)) {
-		err = IFW_FSM_STATE_UPDATE(IFW_BLE_ROLE_PERIPHERAL, BLE_ROLE,
-					   CORE);
-		if (err) {
-			IFW_DEBUG_LOG_UPDATE_ERROR();
-			return err;
-		}
+	// IFW below
+	// #ifdef CONFIG_USE_PERIPHERAL_FILTER
+	// 	if (IS_ENABLED(CONFIG_BT_PERIPHERAL)) {
+	// 		err = IFW_FSM_STATE_UPDATE(IFW_BLE_ROLE_PERIPHERAL, BLE_ROLE,
+	// 					   CORE);
+	// 		if (err) {
+	// 			IFW_DEBUG_LOG_UPDATE_ERROR();
+	// 			return err;
+	// 		}
 
-		IFW_DEBUG_LOG_UPDATE_SUCCESS(
-			"IFW_BLE_ROLE_PERIPHERAL, BLE_ROLE, CORE");
-	}
-	if (IS_ENABLED(CONFIG_BT_CENTRAL)) {
-		err = IFW_FSM_STATE_UPDATE(IFW_BLE_ROLE_CENTRAL, BLE_ROLE,
-					   CORE);
-		if (err) {
-			IFW_DEBUG_LOG_UPDATE_ERROR();
-			return err;
-		}
+	// 		IFW_DEBUG_LOG_UPDATE_SUCCESS(
+	// 			"IFW_BLE_ROLE_PERIPHERAL, BLE_ROLE, CORE");
+	// 	}
+	// 	if (IS_ENABLED(CONFIG_BT_CENTRAL)) {
+	// 		err = IFW_FSM_STATE_UPDATE(IFW_BLE_ROLE_CENTRAL, BLE_ROLE,
+	// 					   CORE);
+	// 		if (err) {
+	// 			IFW_DEBUG_LOG_UPDATE_ERROR();
+	// 			return err;
+	// 		}
 
-		IFW_DEBUG_LOG_UPDATE_SUCCESS(
-			"IFW_BLE_ROLE_CENTRAL, BLE_ROLE, CORE");
-	}
-#endif
+	// 		IFW_DEBUG_LOG_UPDATE_SUCCESS(
+	// 			"IFW_BLE_ROLE_CENTRAL, BLE_ROLE, CORE");
+	// 	}
+	// #endif
 	// IFW above
 
 	err = lll_conn_init();

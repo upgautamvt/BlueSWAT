@@ -383,13 +383,13 @@ static void bt_spi_rx_thread(void)
 				len = sizeof(struct bt_hci_evt_hdr) +
 				      rxmsg[EVT_HEADER_SIZE];
 
-				IFW_FSM_CHECK_UPDATE(len, HCI_EVT_LEN, SPI);
+				// IFW_FSM_CHECK_UPDATE(len, HCI_EVT_LEN, SPI);
 
-				if (IFW_RUN_VERIFIER(HCI_EVT_LEN, SPI)) {
-					BT_ERR("Event too long: %d", len);
-					net_buf_unref(buf);
-					continue;
-				}
+				// if (IFW_RUN_VERIFIER(HCI_EVT_LEN, SPI)) {
+				// 	BT_ERR("Event too long: %d", len);
+				// 	net_buf_unref(buf);
+				// 	continue;
+				// }
 
 				net_buf_add_mem(buf, &rxmsg[1], len);
 
@@ -419,13 +419,13 @@ static void bt_spi_rx_thread(void)
 				len = sizeof(acl_hdr) +
 				      sys_le16_to_cpu(acl_hdr.len);
 
-				IFW_FSM_CHECK_UPDATE(len, HCI_ACL_LEN, SPI);
+				// IFW_FSM_CHECK_UPDATE(len, HCI_ACL_LEN, SPI);
 
-				if (IFW_RUN_VERIFIER(HCI_ACL_LEN, SPI)) {
-					BT_ERR("Event too long: %d", len);
-					net_buf_unref(buf);
-					continue;
-				}
+				// if (IFW_RUN_VERIFIER(HCI_ACL_LEN, SPI)) {
+				// 	BT_ERR("Event too long: %d", len);
+				// 	net_buf_unref(buf);
+				// 	continue;
+				// }
 
 				net_buf_add_mem(buf, &rxmsg[1], len);
 

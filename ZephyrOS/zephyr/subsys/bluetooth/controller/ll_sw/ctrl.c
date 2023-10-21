@@ -554,13 +554,13 @@ void ll_reset(void)
 {
 	// IFW below
 
-	if (IFW_FSM_STATE_UPDATE(IFW_BLE_LL_STANDBY_STATE, LL_STATE, CORE)) {
-		IFW_DEBUG_LOG_UPDATE_ERROR();
-		return;
-	}
+	// if (IFW_FSM_STATE_UPDATE(IFW_BLE_LL_STANDBY_STATE, LL_STATE, CORE)) {
+	// 	IFW_DEBUG_LOG_UPDATE_ERROR();
+	// 	return;
+	// }
 
-	IFW_DEBUG_LOG_UPDATE_SUCCESS(
-		"state: IFW_BLE_LL_STANDBY_STATE, type: LL_STATE, index: CORE.");
+	// IFW_DEBUG_LOG_UPDATE_SUCCESS(
+	// 	"state: IFW_BLE_LL_STANDBY_STATE, type: LL_STATE, index: CORE.");
 
 	// IFW above
 
@@ -1049,11 +1049,11 @@ static inline u32_t isr_rx_adv(u8_t devmatch_ok, u8_t devmatch_id,
 		// Peripheral receive CONNECT_IND PDU,
 		// Advertising state --> Connection state
 
-		if (IFW_FSM_STATE_UPDATE(IFW_BLE_LL_CONNECTION_STATE, BLE_STATE,
-					 CORE)) {
-			IFW_DEBUG_LOG_UPDATE_ERROR();
-			return;
-		}
+		// if (IFW_FSM_STATE_UPDATE(IFW_BLE_LL_CONNECTION_STATE, BLE_STATE,
+		// 			 CORE)) {
+		// 	IFW_DEBUG_LOG_UPDATE_ERROR();
+		// 	return;
+		// }
 
 		// IFW above
 
@@ -1523,14 +1523,14 @@ static inline u32_t isr_rx_scan(u8_t devmatch_ok, u8_t devmatch_id,
 			// Initiator send the CONNECT_IND PDU: Initiating state --> Connection state
 			int err;
 
-			if (IFW_FSM_STATE_UPDATE(IFW_BLE_LL_CONNECTION_STATE,
-						 LL_STATE, CORE)) {
-				IFW_DEBUG_LOG_UPDATE_ERROR();
-				return err;
-			}
+			// if (IFW_FSM_STATE_UPDATE(IFW_BLE_LL_CONNECTION_STATE,
+			// 			 LL_STATE, CORE)) {
+			// 	IFW_DEBUG_LOG_UPDATE_ERROR();
+			// 	return err;
+			// }
 
-			IFW_DEBUG_LOG_UPDATE_SUCCESS(
-				"IFW_BLE_LL_CONNECTION_STATE, LL_STATE, CORE.");
+			// IFW_DEBUG_LOG_UPDATE_SUCCESS(
+			// 	"IFW_BLE_LL_CONNECTION_STATE, LL_STATE, CORE.");
 
 			// IFW above
 
