@@ -8,6 +8,11 @@
 #define JIT_ON 1
 
 void ifw_fsm_enable(bool jit);
+bool ifw_ll_packet_parser_rx(memq_link_t *link, struct node_rx_hdr *rx);
+bool ifw_l2cap_packet_parser_recv(struct bt_conn *conn, struct net_buf *buf);
+int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class);
+int ifw_run_verifier(uint16_t type, uint16_t class);
+int ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class);
 
 #define IFW_LL_PACKET_PARSER(link, rx)                                         \
 	(ifw_ll_packet_parser_rx(link, rx) == IFW_OPERATION_REJECT)

@@ -6,7 +6,7 @@
 #include "ebpf.h"
 #include "ebpf_allocator.h"
 
-#include "include/fsm_policy_cache.h"
+#include "fsm_policy_cache.h"
 #include "fsm_core.h"
 // #include "include/ebpf_helper.h"
 #include "utils.h"

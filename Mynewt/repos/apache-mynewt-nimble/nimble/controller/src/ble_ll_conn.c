@@ -50,6 +50,7 @@
 #endif
 
 #include "modlog/modlog.h"
+#include "fsm_handle.h"
 
 #if (BLETEST_THROUGHPUT_TEST == 1)
 extern void bletest_completed_pkt(uint16_t handle);

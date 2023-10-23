@@ -4,7 +4,7 @@ This directory contains eBPF programs and tools of BleFSM.
 
 ## eBPF library
 
-IoTFirewallCore/ZephyrOS/zephyr/firewall/libebpf/ebpf-src
+IoTFirewallCore/ZephyrOS/zephyr/firewall/libebpf/src
 
 ## eBPF C source code
 

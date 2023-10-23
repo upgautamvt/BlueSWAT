@@ -16,7 +16,8 @@
         "utils.h": "c",
         "fsm_handle.h": "c",
         "fsm_lib_hdr.h": "c",
-        "os_callout.h": "c"
+        "os_callout.h": "c",
+        "fsm_policy_cache.h": "c"
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
