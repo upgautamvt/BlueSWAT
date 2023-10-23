@@ -8,7 +8,7 @@
 
 static bool result = 0;
 
-bool ifw_l2cap_packet_parser(struct os_mbuf *rxpdu)
+bool ifw_dc_ll_ctrl_parser(struct ble_ll_conn_sm *connsm, struct os_mbuf *rxpdu)
 {
     result = IFW_OPERATION_PASS;
 
