@@ -3,8 +3,17 @@
 
 // #define LINUX_TEST
 // #define AARH64
+// #define RT_THREAD
+#define MYNEWTOS
 
-//#define RT_THREAD
+#ifdef MYNEWTOS
+#include <stdlib.h>
+
+#define my_os_malloc malloc
+#define my_os_calloc calloc
+#define my_os_realloc realloc
+#define my_os_free free
+#endif
 
 /*
 endian
@@ -20,13 +29,14 @@ endian
 #define my_os_free rt_free
 
 #endif
+
 #if defined(Win32) || defined(LINUX_TEST)
+
 #include <stdlib.h>
 #define my_os_malloc malloc
 #define my_os_calloc calloc
 #define my_os_realloc realloc
 #define my_os_free free
-
 #define DEBUG_LOG printf
 
 #else
@@ -37,9 +47,11 @@ endian
 #define my_os_calloc calloc
 #define my_os_realloc realloc
 #define my_os_free free
+
 #endif // NRF52_NO_OS
 
 #if defined(ZEPHYR_OS)
+
 #include <zephyr.h>
 #include "include/kernel.h"
 // DEBUG_LOG
@@ -73,30 +85,31 @@ endian
 #endif // end ZEPHYR_OS
 
 #ifdef STM32L475_NO_OS
+
 #include "malloc.h"
 #include <string.h>
 
 static void *my_malloc(size_t size)
 {
-	return mymalloc(1, size);
+    return mymalloc(1, size);
 }
 
 static void *my_calloc(size_t nelem, size_t elmsize)
 {
-	size_t size = nelem * elmsize;
-	void *mem = mymalloc(1, size);
-	memset(mem, 0, size);
-	return mem;
+    size_t size = nelem * elmsize;
+    void *mem = mymalloc(1, size);
+    memset(mem, 0, size);
+    return mem;
 }
 
 static void my_free(void *rmem)
 {
-	myfree(1, rmem);
+    myfree(1, rmem);
 }
 
 #define my_os_malloc my_malloc
 #define my_os_calloc my_calloc
-//#define my_os_realloc realloc
+// #define my_os_realloc realloc
 #define my_os_free my_free
 
 #endif

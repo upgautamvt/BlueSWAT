@@ -17,7 +17,12 @@
         "fsm_handle.h": "c",
         "fsm_lib_hdr.h": "c",
         "os_callout.h": "c",
-        "fsm_policy_cache.h": "c"
+        "fsm_policy_cache.h": "c",
+        "ebpf_porting.h": "c",
+        "os_mbuf.h": "c",
+        "assert.h": "c",
+        "syscfg.h": "c",
+        "stdlib.h": "c"
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"

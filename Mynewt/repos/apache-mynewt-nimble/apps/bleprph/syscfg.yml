@@ -73,3 +73,5 @@ syscfg.vals:
 
     # Whether to save data to sys/config, or just keep it in RAM.
     BLE_STORE_CONFIG_PERSIST: 0
+
+
