@@ -5,3 +5,4 @@ pkg.deps:
     - nimble
     - firewall
     - firewall/libebpf
+    - firewall/policy/specification
