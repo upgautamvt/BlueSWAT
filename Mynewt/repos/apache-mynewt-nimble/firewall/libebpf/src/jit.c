@@ -66,7 +66,7 @@ void jit_state_set_mem(jit_state *state, jit_mem *mem)
 {
     state->jmem = mem;
     state->jit_code = (uint8_t *)((uint32_t)mem->jit_code & (~0x3));
-    state->offsets = (uint32_t *)mem->jmp_offsets;
+    state->offsets = mem->jmp_offsets;
 }
 
 void gen_jit_code(struct ebpf_vm *vm)
