@@ -121,23 +121,23 @@ u64 ebpf_vm_exec(const struct ebpf_vm *vm, void *mem, u32 mem_len)
 #define SRC reg[inst->src]
 #define IMM inst->imm
 #define AX reg[MAX_BPF_EXT_REG - 1]
-#define BOUNDS_CHECK_LOAD(size)                                    \
-    do                                                             \
-    {                                                              \
-        if (!bounds_check(vm, reg[inst->src] + inst->offset, size, \
-                          "load", cur_pc, mem, mem_len, stack))    \
-        {                                                          \
-            return -1;                                             \
-        }                                                          \
+#define BOUNDS_CHECK_LOAD(size)                                                         \
+    do                                                                                  \
+    {                                                                                   \
+        if (!bounds_check(vm, (void *)(uintptr_t)(reg[inst->src] + inst->offset), size, \
+                          "load", cur_pc, mem, mem_len, stack))                         \
+        {                                                                               \
+            return -1;                                                                  \
+        }                                                                               \
     } while (0)
-#define BOUNDS_CHECK_STORE(size)                                   \
-    do                                                             \
-    {                                                              \
-        if (!bounds_check(vm, reg[inst->src] + inst->offset, size, \
-                          "store", cur_pc, mem, mem_len, stack))   \
-        {                                                          \
-            return -1;                                             \
-        }                                                          \
+#define BOUNDS_CHECK_STORE(size)                                                        \
+    do                                                                                  \
+    {                                                                                   \
+        if (!bounds_check(vm, (void *)(uintptr_t)(reg[inst->src] + inst->offset), size, \
+                          "store", cur_pc, mem, mem_len, stack))                        \
+        {                                                                               \
+            return -1;                                                                  \
+        }                                                                               \
     } while (0)
 
     while (true)
@@ -349,7 +349,7 @@ u64 ebpf_vm_exec(const struct ebpf_vm *vm, void *mem, u32 mem_len)
             break;
         case EBPF_OP_LDXDW:
             BOUNDS_CHECK_LOAD(8);
-            uintptr *ptr = SRC + inst->offset;
+            // uintptr *ptr = SRC + inst->offset;
             // printf("ptr = %p %u , val=%u %p\n", ptr, ptr, *ptr, *ptr);
             DST = *(u64 *)(uintptr)(SRC + inst->offset);
             break;

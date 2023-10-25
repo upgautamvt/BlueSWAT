@@ -393,7 +393,7 @@ static inline u32 _thumb32_LDR_IMM_T4(s8 Rt, s8 Rn, s32 offImm8)
 	return inst;
 }
 
-static inline u32 _thumb32_LDRD_IMM_T1(s8 Rt[], s8 Rn, s32 offImm8)
+static inline u32 _thumb32_LDRD_IMM_T1(const s8 Rt[], s8 Rn, s32 offImm8)
 {
 	u32 P = offImm8 != 0, U = offImm8 > 0, W = 0;
 	u32 imm8 = offImm8 > 0 ? offImm8 : -offImm8;
@@ -427,7 +427,8 @@ static inline u32 _thumb32_STRH_IMM_T3(s8 Rn, s8 Rt, s16 offImm8)
 	return inst;
 }
 
-static inline u32 _thumb32_STRD_IMM_T1(s8 RnSrc[], s8 RtDst, s16 offImm8)
+static inline u32 _thumb32_STRD_IMM_T1(const s8 RnSrc[], const s8 RtDst,
+				       s16 offImm8)
 {
 	u32 P = offImm8 != 0;
 	u32 U = offImm8 > 0, W = 0;
