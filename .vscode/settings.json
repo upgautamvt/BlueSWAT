@@ -23,7 +23,9 @@
         "assert.h": "c",
         "syscfg.h": "c",
         "stdlib.h": "c",
-        "conn_chan_map.h": "c"
+        "conn_chan_map.h": "c",
+        "byteorder.h": "c",
+        "string.h": "c"
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"

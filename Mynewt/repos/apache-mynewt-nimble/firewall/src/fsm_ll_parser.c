@@ -12,5 +12,7 @@ bool ifw_dc_ll_ctrl_parser(struct ble_ll_conn_sm *connsm, struct os_mbuf *rxpdu)
 {
     result = IFW_OPERATION_PASS;
 
+    MODLOG_DFLT(INFO, "ifw_dc_ll_ctrl_parser invoked here!\n");
+
     return result;
 }
