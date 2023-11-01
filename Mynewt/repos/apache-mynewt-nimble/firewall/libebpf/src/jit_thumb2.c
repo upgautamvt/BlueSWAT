@@ -258,12 +258,12 @@ Thumb2 decode
 */
 void jit_dump_inst(jit_state *state)
 {
-    DEBUG_LOG("\nDecode:\n");
+    // DEBUG_LOG("\nDecode:\n");
     for (int i = 0; i < state->idx; i++)
     {
-        DEBUG_LOG("%02x", state->jit_code[i]);
+        // DEBUG_LOG("%02x", state->jit_code[i]);
     }
-    DEBUG_LOG("\n");
+    // DEBUG_LOG("\n");
 }
 
 /*
@@ -436,7 +436,7 @@ static void _emit_sub_imm(jit_state *state, const s8 dst, const s8 src, s32 val)
 {
     if (val < 0 || val > 4095)
     {
-        DEBUG_LOG("Invalide imm value. Line:%d Val:%d\n", __LINE__, val);
+        // DEBUG_LOG("Invalide imm value. Line:%d Val:%d\n", __LINE__, val);
         return;
     }
     if (dst < 8 && dst >= 0 && src < 8 && src >= 0)
@@ -1884,7 +1884,7 @@ static int build_inst(jit_state *state, ebpf_inst *inst)
         break;
 
     default:
-        DEBUG_LOG("Unsupport op: %x pc: %d\n", code, pc);
+        // DEBUG_LOG("Unsupport op: %x pc: %d\n", code, pc);
         // state->err_line = __LINE__;
         // return -1;
         break;
@@ -1895,7 +1895,7 @@ static int build_inst(jit_state *state, ebpf_inst *inst)
         //     return -1;
 
     todo:
-        DEBUG_LOG("TODO op: %x pc: %d\n", code, pc);
+        // DEBUG_LOG("TODO op: %x pc: %d\n", code, pc);
         return -1;
     }
     return 0;
@@ -1995,7 +1995,7 @@ static void build_body(jit_state *state)
         }
         if (ret < 0)
         {
-            DEBUG_LOG("ERROR: %d\n", ret);
+            // DEBUG_LOG("ERROR: %d\n", ret);
             return;
         }
     }

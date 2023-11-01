@@ -3,6 +3,7 @@
 #include "fsm_core.h"
 #include "fsm_policy_cache.h"
 #include "utils.h"
+#include "fsm_lib_hdr.h"
 
 static int ifw_core_state_num[IFW_CORE_STATE_NUM] = {
     IFW_BLE_LL_STATE_NUM,
@@ -58,7 +59,7 @@ void ifw_fsm_init()
 // state: state value, e.g. DISPLAY_YESNO(1)
 // type: state type, e.g. IFW_IO_CAPACITY
 // class: state class, e.g. core / shared / conn / dc
-int ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class)
+uint8_t ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class)
 {
     switch (class)
     {
@@ -87,7 +88,6 @@ int ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class)
         break;
 
     default:
-        // IFW_DEBUG_LOG("Unknown state class. State update error.");
         return IFW_UPDATE_ERROR;
     }
 
@@ -96,11 +96,11 @@ int ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class)
     return IFW_UPDATE_SUCCESS;
 }
 
-// update the state machine for checking
+// update the state machine and run verifier
 // state: state value, e.g. DISPLAY_YESNO(1)
 // type: state type, e.g. IFW_IO_CAPACITY
 // class: state class, e.g. core / shared / conn / dc
-int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
+uint8_t ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
 {
     if (fsm_new_init)
     {
@@ -178,14 +178,23 @@ int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
         break;
 
     default:
-        // IFW_DEBUG_LOG("Unknown state class. Check update error.");
+        MODLOG_DFLT(INFO, "Unknown state class. State update error.\n");
         return IFW_UPDATE_ERROR;
     }
 
-    return IFW_UPDATE_SUCCESS;
+    if (IFW_RUN_VERIFIER(type, class))
+    {
+        MODLOG_DFLT(INFO, "Running verifier.\n");
+        MODLOG_DFLT(INFO, "Invalid session state detected! Abort!\n");
+        return IFW_OPERATION_REJECT;
+    }
+
+    MODLOG_DFLT(INFO, "Verification passed. State update success.\n");
+
+    return IFW_OPERATION_PASS;
 }
 
-int ifw_run_verifier(uint16_t type, uint16_t class)
+uint8_t ifw_run_verifier(uint16_t type, uint16_t class)
 {
     fsm_new_init = 0;
 

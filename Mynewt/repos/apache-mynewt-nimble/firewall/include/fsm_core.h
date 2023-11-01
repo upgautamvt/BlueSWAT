@@ -7,8 +7,8 @@
 #define IFW_OPERATION_PASS 0
 #define IFW_OPERATION_REJECT 1
 
-#define IFW_UPDATE_SUCCESS 0
-#define IFW_UPDATE_ERROR 1
+#define IFW_UPDATE_SUCCESS 2
+#define IFW_UPDATE_ERROR 3
 
 // BlueSWAT FSM state
 typedef enum
@@ -171,18 +171,27 @@ enum ifw_state_class
 // FSM
 struct FsmState
 {
-    int core_state[IFW_CORE_STATE_NUM];
-    int shared_state[IFW_SHARED_STATE_NUM];
-    int conn_param[IFW_CONN_PARAM_NUM];
-    int dc_param[IFW_DC_PARAM_NUM];
+    uint8_t core_state[IFW_CORE_STATE_NUM];
+    uint8_t shared_state[IFW_SHARED_STATE_NUM];
+    uint8_t conn_param[IFW_CONN_PARAM_NUM];
+    uint8_t dc_param[IFW_DC_PARAM_NUM];
 
-    int spi_param[IFW_SPI_PARAM_NUM];
-    int hci_param[IFW_HCI_PARAM_NUM];
+    uint8_t spi_param[IFW_SPI_PARAM_NUM];
+    uint8_t hci_param[IFW_HCI_PARAM_NUM];
 };
 
 // firewall trace hooks
-int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class);
-int ifw_run_verifier(uint16_t type, uint16_t class);
-int ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class);
+uint8_t ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class);
+uint8_t ifw_run_verifier(uint16_t type, uint16_t class);
+uint8_t ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class);
+
+#define IFW_FSM_CHECK_UPDATE(state, type, class) \
+    (ifw_fsm_check_update(state, type, class) == IFW_UPDATE_ERROR)
+
+#define IFW_RUN_VERIFIER(type, class) \
+    (ifw_run_verifier(type, class) == IFW_UPDATE_ERROR)
+
+#define IFW_FSM_STATE_UPDATE(state, type, class) \
+    (ifw_fsm_state_update(state, type, class) == IFW_UPDATE_ERROR)
 
 #endif // FSM_MONITOR_H_

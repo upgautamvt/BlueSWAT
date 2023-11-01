@@ -43,8 +43,8 @@
 /* Application-specified header. */
 #include "bleprph.h"
 
-// BlueSWAT header
-#include "fsm_core.h"
+// BlueSWAT handle
+#include "fsm_handle.h"
 
 static int bleprph_gap_event(struct ble_gap_event *event, void *arg);
 
@@ -83,6 +83,10 @@ bleprph_print_conn_desc(struct ble_gap_conn_desc *desc)
 static void bleprph_advertise(void)
 {
     MODLOG_DFLT(INFO, "advertising\n");
+
+    // IFW below
+    // enable IoT firewall Finite State Machine
+    ifw_fsm_enable(JIT_ON);
 
     uint8_t own_addr_type;
     struct ble_gap_adv_params adv_params;

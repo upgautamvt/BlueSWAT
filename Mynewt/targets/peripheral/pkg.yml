@@ -3,7 +3,5 @@ pkg.type: target
 pkg.description: 
 pkg.author: 
 pkg.homepage: 
-# pkg.cflags: 
-#     - '-Xlinker'
-#     - '-lg'
+
 

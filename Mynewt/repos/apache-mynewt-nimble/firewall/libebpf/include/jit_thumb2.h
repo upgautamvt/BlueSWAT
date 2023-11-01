@@ -498,9 +498,9 @@ static inline u32 _thumb32_ORRW_REG_T2(s8 Rd, s8 Rn, s8 Rm, s32 shiftImm5,
 #ifdef USE_JIT_TEST
 static void test_all_inst()
 {
-    DEBUG_LOG("_thumb32_LSRW_IMM_T2: %x -> lsr.w r1, r2, #5\n",
+    // DEBUG_LOG("_thumb32_LSRW_IMM_T2: %x -> lsr.w r1, r2, #5\n",
               _thumb32_LSRW_IMM_T2(1, 2, 5, FLAG_NOS));
-    DEBUG_LOG("_thumb32_ORRW_REG_T2: %x -> orr.w r1, r2, r3, lsl #5\n",
+              // DEBUG_LOG("_thumb32_ORRW_REG_T2: %x -> orr.w r1, r2, r3, lsl #5\n",
               _thumb32_ORRW_REG_T2(1, 2, 3, 5, SRTYPE_LSL, FLAG_NOS));
 }
 #endif // USE_JIT_TEST

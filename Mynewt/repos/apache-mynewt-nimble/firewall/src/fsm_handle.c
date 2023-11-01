@@ -4,11 +4,11 @@
 #include "fsm_policy_cache.h"
 #include "fsm_lib_hdr.h"
 
-static void disable_mpu_for_jit()
-{
-    extern void arm_core_mpu_disable();
-    arm_core_mpu_disable();
-}
+// static void disable_mpu_for_jit()
+// {
+//     extern void arm_core_mpu_disable();
+//     arm_core_mpu_disable();
+// }
 
 void ifw_fsm_enable(bool jit)
 {
@@ -16,7 +16,7 @@ void ifw_fsm_enable(bool jit)
 
     if (jit)
     {
-        disable_mpu_for_jit();
+        // disable_mpu_for_jit();
         set_all_policy_jit_on();
     }
 

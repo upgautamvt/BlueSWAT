@@ -47,6 +47,7 @@
 #include "ble_ll_priv.h"
 
 #include "modlog/modlog.h"
+#include "fsm_handle.h"
 
 #if MYNEWT_VAL(BLE_LL_ROLE_BROADCASTER)
 
@@ -5120,6 +5121,13 @@ void ble_ll_adv_rx_pkt_in(uint8_t ptype, uint8_t *rxbuf, struct ble_mbuf_hdr *hd
     {
         return;
     }
+
+    // IFW BELOW, adv packets parser
+    if (IFW_ADV_LL_PARSER(ptype, rxbuf, hdr) == IFW_VERIFICATION_REJECT)
+    {
+        return;
+    }
+    // IFW ABOVE
 
     /*
      * If we have received a scan request and we are transmitting a response

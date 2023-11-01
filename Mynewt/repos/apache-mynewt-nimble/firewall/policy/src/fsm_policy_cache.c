@@ -69,7 +69,7 @@ void set_policy_jit_on(int pid)
     }
     else
     {
-        DEBUG_LOG("Wrong PID for enabling JIT.");
+        // DEBUG_LOG("Wrong PID for enabling JIT.");
     }
 }
 
@@ -80,7 +80,7 @@ void set_all_policy_jit_on()
         policy_arr[pid].jit = true;
     }
 
-    DEBUG_LOG("Set JIT on for all policies.");
+    // DEBUG_LOG("Set JIT on for all policies.");
 }
 
 // init policy manager

@@ -6,11 +6,10 @@
 
 #include "utils.h"
 
-static bool result = 0;
-
 bool ifw_dc_l2cap_parser(struct os_mbuf *rxpdu)
 {
-    result = IFW_OPERATION_PASS;
 
-    return result;
+    MODLOG_DFLT(INFO, "ifw_dc_l2cap_parser invoked here!\n");
+
+    return IFW_OPERATION_PASS;
 }

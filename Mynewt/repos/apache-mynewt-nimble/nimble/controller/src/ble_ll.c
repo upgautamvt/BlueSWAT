@@ -66,7 +66,7 @@
 
 // IFW BELOW
 #include "modlog/modlog.h"
-// #include "fsm_handle.h"
+#include "fsm_handle.h"
 // IFW ABOVE
 
 /* XXX:
@@ -1868,6 +1868,11 @@ ble_ll_init(void)
 
     ble_ll_trace_init();
     ble_phy_trace_init();
+
+    // IFW BELOW
+    // Initialize the BlueSWAT FSM
+    ifw_fsm_init();
+    // IFW ABOVE
 
     /* Set public device address if not already set */
     if (ble_ll_is_addr_empty(g_dev_addr))
