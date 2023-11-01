@@ -59,7 +59,7 @@ void ifw_fsm_init()
 // state: state value, e.g. DISPLAY_YESNO(1)
 // type: state type, e.g. IFW_IO_CAPACITY
 // class: state class, e.g. core / shared / conn / dc
-uint8_t ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class)
+void ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class)
 {
     switch (class)
     {
@@ -88,12 +88,12 @@ uint8_t ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class)
         break;
 
     default:
-        return IFW_UPDATE_ERROR;
+        return;
     }
 
     fsm_new_init = 0;
 
-    return IFW_UPDATE_SUCCESS;
+    return;
 }
 
 // update the state machine and run verifier
@@ -191,6 +191,8 @@ uint8_t ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
 
     MODLOG_DFLT(INFO, "Verification passed. State update success.\n");
 
+    IFW_FSM_STATE_UPDATE(state, type, class);
+
     return IFW_OPERATION_PASS;
 }
 
@@ -201,8 +203,6 @@ uint8_t ifw_run_verifier(uint16_t type, uint16_t class)
     if (run_fsm_check_policy(type, class, &newFSMState) ==
         IFW_OPERATION_REJECT)
     {
-        // IFW_DEBUG_LOG("IFW_OPERATION_REJECT.");
-
         return IFW_OPERATION_REJECT;
     }
 

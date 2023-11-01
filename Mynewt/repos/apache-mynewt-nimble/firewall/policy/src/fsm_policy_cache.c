@@ -301,15 +301,9 @@ int run_fsm_check_policy(int type, int class, void *newState)
 
     while (policy != NULL)
     {
-        // tick++;
-        // printf("tick: %d\n", tick);
-
-        // printf("policy index: %d\n", policy->index);
-
         uint64_t result = 0;
 
         result = run_fsm_ebpf_policy(policy->index, newState, 64);
-
         if (result == IFW_OPERATION_REJECT)
         {
             return IFW_OPERATION_REJECT;
@@ -317,8 +311,6 @@ int run_fsm_check_policy(int type, int class, void *newState)
 
         policy = policy->policy_next;
     }
-
-    // IFW_DEBUG_LOG("Policy_cache function right!");
 
     return IFW_OPERATION_PASS;
 }

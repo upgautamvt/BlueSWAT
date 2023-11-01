@@ -13,6 +13,7 @@
 
 void ifw_fsm_enable(bool jit);
 void ifw_fsm_init();
+
 bool ifw_adv_ll_parser(uint8_t ptype, uint8_t *rxbuf, struct ble_mbuf_hdr *hdr);
 bool ifw_dc_ll_ctrl_parser(struct ble_ll_conn_sm *connsm, struct os_mbuf *rxpdu);
 bool ifw_dc_l2cap_parser(struct os_mbuf *rxpdu);

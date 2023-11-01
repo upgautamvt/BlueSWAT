@@ -90,7 +90,7 @@ enum ifw_core_state_type
 typedef enum
 {
     BD_ADDR = 0,
-    BONDING,
+    BONDING = 6,
 
     // whether peer supports SC
     SC,
@@ -183,7 +183,7 @@ struct FsmState
 // firewall trace hooks
 uint8_t ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class);
 uint8_t ifw_run_verifier(uint16_t type, uint16_t class);
-uint8_t ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class);
+void ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class);
 
 #define IFW_FSM_CHECK_UPDATE(state, type, class) \
     (ifw_fsm_check_update(state, type, class) == IFW_UPDATE_ERROR)
@@ -192,6 +192,6 @@ uint8_t ifw_fsm_state_update(uint16_t state, uint16_t type, uint16_t class);
     (ifw_run_verifier(type, class) == IFW_UPDATE_ERROR)
 
 #define IFW_FSM_STATE_UPDATE(state, type, class) \
-    (ifw_fsm_state_update(state, type, class) == IFW_UPDATE_ERROR)
+    ifw_fsm_state_update(state, type, class)
 
 #endif // FSM_MONITOR_H_
