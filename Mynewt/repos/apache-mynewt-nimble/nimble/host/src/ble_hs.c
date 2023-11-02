@@ -30,8 +30,8 @@
 #include "nimble/nimble_port.h"
 #endif
 
-#define BLE_HS_HCI_EVT_COUNT    (MYNEWT_VAL(BLE_TRANSPORT_EVT_COUNT) + \
-                                 MYNEWT_VAL(BLE_TRANSPORT_EVT_DISCARDABLE_COUNT))
+#define BLE_HS_HCI_EVT_COUNT (MYNEWT_VAL(BLE_TRANSPORT_EVT_COUNT) + \
+                              MYNEWT_VAL(BLE_TRANSPORT_EVT_DISCARDABLE_COUNT))
 
 static void ble_hs_event_rx_hci_ev(struct ble_npl_event *ev);
 #if NIMBLE_BLE_CONNECT
@@ -43,9 +43,7 @@ static void ble_hs_event_start_stage2(struct ble_npl_event *ev);
 static void ble_hs_timer_sched(int32_t ticks_from_now);
 
 struct os_mempool ble_hs_hci_ev_pool;
-static os_membuf_t ble_hs_hci_os_event_buf[
-    OS_MEMPOOL_SIZE(BLE_HS_HCI_EVT_COUNT, sizeof (struct ble_npl_event))
-];
+static os_membuf_t ble_hs_hci_os_event_buf[OS_MEMPOOL_SIZE(BLE_HS_HCI_EVT_COUNT, sizeof(struct ble_npl_event))];
 
 /** OS event - triggers tx of pending notifications and indications. */
 static struct ble_npl_event ble_hs_ev_tx_notifications;
@@ -60,7 +58,7 @@ uint8_t ble_hs_sync_state;
 uint8_t ble_hs_enabled_state;
 static int ble_hs_reset_reason;
 
-#define BLE_HS_SYNC_RETRY_TIMEOUT_MS    100 /* ms */
+#define BLE_HS_SYNC_RETRY_TIMEOUT_MS 100 /* ms */
 
 static void *ble_hs_parent_task;
 
@@ -89,19 +87,20 @@ uint16_t ble_hs_max_client_configs;
 static uint8_t ble_hs_dbg_mutex_locked;
 #endif
 
-STATS_SECT_DECL(ble_hs_stats) ble_hs_stats;
+STATS_SECT_DECL(ble_hs_stats)
+ble_hs_stats;
 STATS_NAME_START(ble_hs_stats)
-    STATS_NAME(ble_hs_stats, conn_create)
-    STATS_NAME(ble_hs_stats, conn_delete)
-    STATS_NAME(ble_hs_stats, hci_cmd)
-    STATS_NAME(ble_hs_stats, hci_event)
-    STATS_NAME(ble_hs_stats, hci_invalid_ack)
-    STATS_NAME(ble_hs_stats, hci_unknown_event)
-    STATS_NAME(ble_hs_stats, hci_timeout)
-    STATS_NAME(ble_hs_stats, reset)
-    STATS_NAME(ble_hs_stats, sync)
-    STATS_NAME(ble_hs_stats, pvcy_add_entry)
-    STATS_NAME(ble_hs_stats, pvcy_add_entry_fail)
+STATS_NAME(ble_hs_stats, conn_create)
+STATS_NAME(ble_hs_stats, conn_delete)
+STATS_NAME(ble_hs_stats, hci_cmd)
+STATS_NAME(ble_hs_stats, hci_event)
+STATS_NAME(ble_hs_stats, hci_invalid_ack)
+STATS_NAME(ble_hs_stats, hci_unknown_event)
+STATS_NAME(ble_hs_stats, hci_timeout)
+STATS_NAME(ble_hs_stats, reset)
+STATS_NAME(ble_hs_stats, sync)
+STATS_NAME(ble_hs_stats, pvcy_add_entry)
+STATS_NAME(ble_hs_stats, pvcy_add_entry_fail)
 STATS_NAME_END(ble_hs_stats)
 
 struct ble_npl_eventq *
@@ -110,20 +109,19 @@ ble_hs_evq_get(void)
     return ble_hs_evq;
 }
 
-void
-ble_hs_evq_set(struct ble_npl_eventq *evq)
+void ble_hs_evq_set(struct ble_npl_eventq *evq)
 {
     ble_hs_evq = evq;
 }
 
 #if MYNEWT_VAL(BLE_HS_DEBUG)
-int
-ble_hs_locked_by_cur_task(void)
+int ble_hs_locked_by_cur_task(void)
 {
 #ifdef MYNEWT
     struct os_task *owner;
 
-    if (!ble_npl_os_started()) {
+    if (!ble_npl_os_started())
+    {
         return ble_hs_dbg_mutex_locked;
     }
 
@@ -138,8 +136,7 @@ ble_hs_locked_by_cur_task(void)
 /**
  * Indicates whether the host's parent task is currently running.
  */
-int
-ble_hs_is_parent_task(void)
+int ble_hs_is_parent_task(void)
 {
     return !ble_npl_os_started() ||
            ble_npl_get_current_task_id() == ble_hs_parent_task;
@@ -148,13 +145,13 @@ ble_hs_is_parent_task(void)
 /**
  * Locks the BLE host mutex.  Nested locks allowed.
  */
-void
-ble_hs_lock_nested(void)
+void ble_hs_lock_nested(void)
 {
     int rc;
 
 #if MYNEWT_VAL(BLE_HS_DEBUG)
-    if (!ble_npl_os_started()) {
+    if (!ble_npl_os_started())
+    {
         ble_hs_dbg_mutex_locked = 1;
         return;
     }
@@ -167,13 +164,13 @@ ble_hs_lock_nested(void)
 /**
  * Unlocks the BLE host mutex.  Nested locks allowed.
  */
-void
-ble_hs_unlock_nested(void)
+void ble_hs_unlock_nested(void)
 {
     int rc;
 
 #if MYNEWT_VAL(BLE_HS_DEBUG)
-    if (!ble_npl_os_started()) {
+    if (!ble_npl_os_started())
+    {
         ble_hs_dbg_mutex_locked = 0;
         return;
     }
@@ -186,12 +183,12 @@ ble_hs_unlock_nested(void)
 /**
  * Locks the BLE host mutex.  Nested locks not allowed.
  */
-void
-ble_hs_lock(void)
+void ble_hs_lock(void)
 {
     BLE_HS_DBG_ASSERT(!ble_hs_locked_by_cur_task());
 #if MYNEWT_VAL(BLE_HS_DEBUG)
-    if (!ble_npl_os_started()) {
+    if (!ble_npl_os_started())
+    {
         BLE_HS_DBG_ASSERT(!ble_hs_dbg_mutex_locked);
     }
 #endif
@@ -202,11 +199,11 @@ ble_hs_lock(void)
 /**
  * Unlocks the BLE host mutex.  Nested locks not allowed.
  */
-void
-ble_hs_unlock(void)
+void ble_hs_unlock(void)
 {
 #if MYNEWT_VAL(BLE_HS_DEBUG)
-    if (!ble_npl_os_started()) {
+    if (!ble_npl_os_started())
+    {
         BLE_HS_DBG_ASSERT(ble_hs_dbg_mutex_locked);
     }
 #endif
@@ -214,12 +211,12 @@ ble_hs_unlock(void)
     ble_hs_unlock_nested();
 }
 
-void
-ble_hs_process_rx_data_queue(void)
+void ble_hs_process_rx_data_queue(void)
 {
     struct os_mbuf *om;
 
-    while ((om = ble_mqueue_get(&ble_hs_rx_q)) != NULL) {
+    while ((om = ble_mqueue_get(&ble_hs_rx_q)) != NULL)
+    {
         ble_hs_hci_evt_acl_process(om);
     }
 }
@@ -231,12 +228,14 @@ ble_hs_wakeup_tx_conn(struct ble_hs_conn *conn)
     struct os_mbuf *om;
     int rc;
 
-    while ((omp = STAILQ_FIRST(&conn->bhc_tx_q)) != NULL) {
+    while ((omp = STAILQ_FIRST(&conn->bhc_tx_q)) != NULL)
+    {
         STAILQ_REMOVE_HEAD(&conn->bhc_tx_q, omp_next);
 
         om = OS_MBUF_PKTHDR_TO_MBUF(omp);
         rc = ble_hs_hci_acl_tx_now(conn, &om);
-        if (rc == BLE_HS_EAGAIN) {
+        if (rc == BLE_HS_EAGAIN)
+        {
             /* Controller is at capacity.  This packet will be the first to
              * get transmitted next time around.
              */
@@ -251,8 +250,7 @@ ble_hs_wakeup_tx_conn(struct ble_hs_conn *conn)
 /**
  * Schedules the transmission of all queued ACL data packets to the controller.
  */
-void
-ble_hs_wakeup_tx(void)
+void ble_hs_wakeup_tx(void)
 {
     struct ble_hs_conn *conn;
     int rc;
@@ -265,11 +263,14 @@ ble_hs_wakeup_tx(void)
      */
     for (conn = ble_hs_conn_first();
          conn != NULL;
-         conn = SLIST_NEXT(conn, bhc_next)) {
+         conn = SLIST_NEXT(conn, bhc_next))
+    {
 
-        if (conn->bhc_flags & BLE_HS_CONN_F_TX_FRAG) {
+        if (conn->bhc_flags & BLE_HS_CONN_F_TX_FRAG)
+        {
             rc = ble_hs_wakeup_tx_conn(conn);
-            if (rc != 0) {
+            if (rc != 0)
+            {
                 goto done;
             }
             break;
@@ -281,10 +282,12 @@ ble_hs_wakeup_tx(void)
      */
     for (conn = ble_hs_conn_first();
          conn != NULL;
-         conn = SLIST_NEXT(conn, bhc_next)) {
+         conn = SLIST_NEXT(conn, bhc_next))
+    {
 
         rc = ble_hs_wakeup_tx_conn(conn);
-        if (rc != 0) {
+        if (rc != 0)
+        {
             goto done;
         }
     }
@@ -298,19 +301,18 @@ ble_hs_clear_rx_queue(void)
 {
     struct os_mbuf *om;
 
-    while ((om = ble_mqueue_get(&ble_hs_rx_q)) != NULL) {
+    while ((om = ble_mqueue_get(&ble_hs_rx_q)) != NULL)
+    {
         os_mbuf_free_chain(om);
     }
 }
 
-int
-ble_hs_is_enabled(void)
+int ble_hs_is_enabled(void)
 {
     return ble_hs_enabled_state == BLE_HS_ENABLED_STATE_ON;
 }
 
-int
-ble_hs_synced(void)
+int ble_hs_synced(void)
 {
     return ble_hs_sync_state == BLE_HS_SYNC_STATE_GOOD;
 }
@@ -328,23 +330,29 @@ ble_hs_sync(void)
     ble_hs_sync_state = BLE_HS_SYNC_STATE_BRINGUP;
 
     rc = ble_hs_startup_go();
-    if (rc == 0) {
+    if (rc == 0)
+    {
         ble_hs_sync_state = BLE_HS_SYNC_STATE_GOOD;
-    } else {
+    }
+    else
+    {
         ble_hs_sync_state = BLE_HS_SYNC_STATE_BAD;
     }
 
     retry_tmo_ticks = ble_npl_time_ms_to_ticks32(BLE_HS_SYNC_RETRY_TIMEOUT_MS);
     ble_hs_timer_sched(retry_tmo_ticks);
 
-    if (rc == 0) {
+    if (rc == 0)
+    {
         rc = ble_hs_misc_restore_irks();
-        if (rc != 0) {
+        if (rc != 0)
+        {
             BLE_HS_LOG(INFO, "Failed to restore IRKs from store; status=%d\n",
                        rc);
         }
 
-        if (ble_hs_cfg.sync_cb != NULL) {
+        if (ble_hs_cfg.sync_cb != NULL)
+        {
             ble_hs_cfg.sync_cb();
         }
 
@@ -371,7 +379,8 @@ ble_hs_reset(void)
     /* Clear configured addresses. */
     ble_hs_id_reset();
 
-    if (ble_hs_cfg.reset_cb != NULL && ble_hs_reset_reason != 0) {
+    if (ble_hs_cfg.reset_cb != NULL && ble_hs_reset_reason != 0)
+    {
         ble_hs_cfg.reset_cb(ble_hs_reset_reason);
     }
     ble_hs_reset_reason = 0;
@@ -389,7 +398,8 @@ ble_hs_timer_exp(struct ble_npl_event *ev)
 {
     int32_t ticks_until_next;
 
-    switch (ble_hs_sync_state) {
+    switch (ble_hs_sync_state)
+    {
     case BLE_HS_SYNC_STATE_GOOD:
 #if NIMBLE_BLE_CONNECT
         ticks_until_next = ble_gattc_timer();
@@ -420,7 +430,6 @@ ble_hs_timer_exp(struct ble_npl_event *ev)
         assert(0);
         break;
     }
-
 }
 
 static void
@@ -428,9 +437,12 @@ ble_hs_timer_reset(uint32_t ticks)
 {
     int rc;
 
-    if (!ble_hs_is_enabled()) {
+    if (!ble_hs_is_enabled())
+    {
         ble_npl_callout_stop(&ble_hs_timer);
-    } else {
+    }
+    else
+    {
         rc = ble_npl_callout_reset(&ble_hs_timer, ticks);
         BLE_HS_DBG_ASSERT_EVAL(rc == 0);
     }
@@ -441,7 +453,8 @@ ble_hs_timer_sched(int32_t ticks_from_now)
 {
     ble_npl_time_t abs_time;
 
-    if (ticks_from_now == BLE_HS_FOREVER) {
+    if (ticks_from_now == BLE_HS_FOREVER)
+    {
         return;
     }
 
@@ -450,14 +463,14 @@ ble_hs_timer_sched(int32_t ticks_from_now)
      */
     abs_time = ble_npl_time_get() + ticks_from_now;
     if (!ble_npl_callout_is_active(&ble_hs_timer) ||
-            ((ble_npl_stime_t)(abs_time -
-                               ble_npl_callout_get_ticks(&ble_hs_timer))) < 0) {
+        ((ble_npl_stime_t)(abs_time -
+                           ble_npl_callout_get_ticks(&ble_hs_timer))) < 0)
+    {
         ble_hs_timer_reset(ticks_from_now);
     }
 }
 
-void
-ble_hs_timer_resched(void)
+void ble_hs_timer_resched(void)
 {
     /* Reschedule the timer to run immediately.  The timer callback will query
      * each module for an up-to-date expiration time.
@@ -472,8 +485,7 @@ ble_hs_sched_start_stage2(void)
                        &ble_hs_ev_start_stage2);
 }
 
-void
-ble_hs_sched_start(void)
+void ble_hs_sched_start(void)
 {
 #ifdef MYNEWT
     ble_npl_eventq_put((struct ble_npl_eventq *)os_eventq_dflt_get(),
@@ -548,15 +560,17 @@ ble_hs_event_start_stage2(struct ble_npl_event *ev)
     assert(rc == 0);
 }
 
-void
-ble_hs_enqueue_hci_event(uint8_t *hci_evt)
+void ble_hs_enqueue_hci_event(uint8_t *hci_evt)
 {
     struct ble_npl_event *ev;
 
     ev = os_memblock_get(&ble_hs_hci_ev_pool);
-    if (ev == NULL) {
+    if (ev == NULL)
+    {
         ble_transport_free(hci_evt);
-    } else {
+    }
+    else
+    {
         ble_npl_event_init(ev, ble_hs_event_rx_hci_ev, hci_evt);
         ble_npl_eventq_put(ble_hs_evq, ev);
     }
@@ -566,11 +580,11 @@ ble_hs_enqueue_hci_event(uint8_t *hci_evt)
  * Schedules for all pending notifications and indications to be sent in the
  * host parent task.
  */
-void
-ble_hs_notifications_sched(void)
+void ble_hs_notifications_sched(void)
 {
 #if !MYNEWT_VAL(BLE_HS_REQUIRE_OS)
-    if (!ble_npl_os_started()) {
+    if (!ble_npl_os_started())
+    {
         ble_gatts_tx_notifications();
         return;
     }
@@ -579,8 +593,7 @@ ble_hs_notifications_sched(void)
     ble_npl_eventq_put(ble_hs_evq, &ble_hs_ev_tx_notifications);
 }
 
-void
-ble_hs_sched_reset(int reason)
+void ble_hs_sched_reset(int reason)
 {
     BLE_HS_DBG_ASSERT(ble_hs_reset_reason == 0);
 
@@ -588,19 +601,18 @@ ble_hs_sched_reset(int reason)
     ble_npl_eventq_put(ble_hs_evq, &ble_hs_ev_reset);
 }
 
-void
-ble_hs_hw_error(uint8_t hw_code)
+void ble_hs_hw_error(uint8_t hw_code)
 {
     ble_hs_sched_reset(BLE_HS_HW_ERR(hw_code));
 }
 
-int
-ble_hs_start(void)
+int ble_hs_start(void)
 {
     int rc;
 
     ble_hs_lock();
-    switch (ble_hs_enabled_state) {
+    switch (ble_hs_enabled_state)
+    {
     case BLE_HS_ENABLED_STATE_ON:
         rc = BLE_HS_EALREADY;
         break;
@@ -621,7 +633,8 @@ ble_hs_start(void)
     }
     ble_hs_unlock();
 
-    if (rc != 0) {
+    if (rc != 0)
+    {
         return rc;
     }
 
@@ -638,7 +651,8 @@ ble_hs_start(void)
 
 #if NIMBLE_BLE_CONNECT
     rc = ble_gatts_start();
-    if (rc != 0) {
+    if (rc != 0)
+    {
         return rc;
     }
 #endif
@@ -667,7 +681,8 @@ ble_hs_rx_data(struct os_mbuf *om, void *arg)
     ble_hs_flow_track_data_mbuf(om);
 
     rc = ble_mqueue_put(&ble_hs_rx_q, ble_hs_evq, om);
-    if (rc != 0) {
+    if (rc != 0)
+    {
         os_mbuf_free_chain(om);
         return BLE_HS_EOS;
     }
@@ -684,14 +699,12 @@ ble_hs_rx_data(struct os_mbuf *om, void *arg)
  *
  * @return                      0 on success; nonzero on failure.
  */
-int
-ble_hs_tx_data(struct os_mbuf *om)
+int ble_hs_tx_data(struct os_mbuf *om)
 {
     return ble_transport_to_ll_acl(om);
 }
 
-void
-ble_hs_init(void)
+void ble_hs_init(void)
 {
     int rc;
 
@@ -700,7 +713,7 @@ ble_hs_init(void)
 
     /* Create memory pool of OS events */
     rc = os_mempool_init(&ble_hs_hci_ev_pool, BLE_HS_HCI_EVT_COUNT,
-                         sizeof (struct ble_npl_event), ble_hs_hci_os_event_buf,
+                         sizeof(struct ble_npl_event), ble_hs_hci_os_event_buf,
                          "ble_hs_hci_ev_pool");
     SYSINIT_PANIC_ASSERT(rc == 0);
 
@@ -754,8 +767,7 @@ ble_hs_init(void)
     ble_mqueue_init(&ble_hs_rx_q, ble_hs_event_rx_data, NULL);
 
     rc = stats_init_and_reg(
-        STATS_HDR(ble_hs_stats), STATS_SIZE_INIT_PARMS(ble_hs_stats,
-        STATS_SIZE_32), STATS_NAME_INIT_PARMS(ble_hs_stats), "ble_hs");
+        STATS_HDR(ble_hs_stats), STATS_SIZE_INIT_PARMS(ble_hs_stats, STATS_SIZE_32), STATS_NAME_INIT_PARMS(ble_hs_stats), "ble_hs");
     SYSINIT_PANIC_ASSERT(rc == 0);
 
     rc = ble_npl_mutex_init(&ble_hs_mutex);
@@ -787,28 +799,24 @@ ble_hs_init(void)
 
 /* Transport APIs for HS side */
 
-int
-ble_transport_to_hs_evt_impl(void *buf)
+int ble_transport_to_hs_evt_impl(void *buf)
 {
     return ble_hs_hci_rx_evt(buf, NULL);
 }
 
-int
-ble_transport_to_hs_acl_impl(struct os_mbuf *om)
+int ble_transport_to_hs_acl_impl(struct os_mbuf *om)
 {
     return ble_hs_rx_data(om, NULL);
 }
 
-int
-ble_transport_to_hs_iso_impl(struct os_mbuf *om)
+int ble_transport_to_hs_iso_impl(struct os_mbuf *om)
 {
     os_mbuf_free_chain(om);
 
     return 0;
 }
 
-void
-ble_transport_hs_init(void)
+void ble_transport_hs_init(void)
 {
     ble_hs_init();
 }

@@ -58,7 +58,8 @@ static int rtt_index;
 #if MYNEWT_VAL(BLE_MONITOR_RTT_BUFFERED)
 static uint8_t rtt_pktbuf[MYNEWT_VAL(BLE_MONITOR_RTT_BUFFER_SIZE)];
 static size_t rtt_pktbuf_pos;
-static struct {
+static struct
+{
     bool dropped;
     struct ble_npl_callout tmo;
     struct ble_monitor_drops_hdr drops_hdr;
@@ -86,7 +87,8 @@ monitor_uart_tx_char(void *arg)
     uint8_t ch;
 
     /* No more data */
-    if (tx_ringbuf_head == tx_ringbuf_tail) {
+    if (tx_ringbuf_head == tx_ringbuf_tail)
+    {
         return -1;
     }
 
@@ -105,10 +107,12 @@ monitor_uart_queue_char(uint8_t ch)
 
     /* We need to try flush some data from ringbuffer if full */
     while (inc_and_wrap(tx_ringbuf_head, sizeof(tx_ringbuf)) ==
-            tx_ringbuf_tail) {
+           tx_ringbuf_tail)
+    {
         uart_start_tx(uart);
         OS_EXIT_CRITICAL(sr);
-        if (os_started()) {
+        if (os_started())
+        {
             os_time_delay(1);
         }
         OS_ENTER_CRITICAL(sr);
@@ -125,7 +129,8 @@ monitor_write(const void *buf, size_t len)
 {
     const uint8_t *ch = buf;
 
-    while (len--) {
+    while (len--)
+    {
         monitor_uart_queue_char(*ch++);
     }
 
@@ -143,7 +148,8 @@ update_drop_counters(struct ble_monitor_hdr *failed_hdr)
 
     rtt_drops.dropped = true;
 
-    switch (failed_hdr->opcode) {
+    switch (failed_hdr->opcode)
+    {
     case BLE_MONITOR_OPCODE_COMMAND_PKT:
         cnt = &rtt_drops.drops_hdr.cmd;
         break;
@@ -161,7 +167,8 @@ update_drop_counters(struct ble_monitor_hdr *failed_hdr)
         break;
     }
 
-    if (*cnt < UINT8_MAX) {
+    if (*cnt < UINT8_MAX)
+    {
         (*cnt)++;
         ble_npl_callout_reset(&rtt_drops.tmo, OS_TICKS_PER_SEC);
     }
@@ -185,29 +192,35 @@ static void
 monitor_write(const void *buf, size_t len)
 {
 #if MYNEWT_VAL(BLE_MONITOR_RTT_BUFFERED)
-    struct ble_monitor_hdr *hdr = (struct ble_monitor_hdr *) rtt_pktbuf;
+    struct ble_monitor_hdr *hdr = (struct ble_monitor_hdr *)rtt_pktbuf;
     bool discard;
     unsigned ret = 0;
 
     /* We will discard any packet which exceeds length of intermediate buffer */
     discard = rtt_pktbuf_pos + len > sizeof(rtt_pktbuf);
 
-    if (!discard) {
+    if (!discard)
+    {
         memcpy(rtt_pktbuf + rtt_pktbuf_pos, buf, len);
     }
 
     rtt_pktbuf_pos += len;
-    if (rtt_pktbuf_pos < sizeof(hdr->data_len) + hdr->data_len) {
+    if (rtt_pktbuf_pos < sizeof(hdr->data_len) + hdr->data_len)
+    {
         return;
     }
 
-    if (!discard) {
+    if (!discard)
+    {
         ret = SEGGER_RTT_WriteNoLock(rtt_index, rtt_pktbuf, rtt_pktbuf_pos);
     }
 
-    if (ret > 0) {
+    if (ret > 0)
+    {
         reset_drop_counters();
-    } else {
+    }
+    else
+    {
         update_drop_counters(hdr);
     }
 
@@ -228,15 +241,16 @@ monitor_write_header(uint16_t opcode, uint16_t len)
 
     hdr_len = sizeof(ts_hdr);
 #if MYNEWT_VAL(BLE_MONITOR_RTT) && MYNEWT_VAL(BLE_MONITOR_RTT_BUFFERED)
-    if (rtt_drops.dropped) {
+    if (rtt_drops.dropped)
+    {
         hdr_len += sizeof(rtt_drops.drops_hdr);
     }
 #endif
 
     hdr.data_len = htole16(4 + hdr_len + len);
-    hdr.hdr_len  = hdr_len;
-    hdr.opcode   = htole16(opcode);
-    hdr.flags    = 0;
+    hdr.hdr_len = hdr_len;
+    hdr.opcode = htole16(opcode);
+    hdr.flags = 0;
 
     /* Use uptime for timestamp */
     ts = os_get_uptime_usec();
@@ -250,7 +264,8 @@ monitor_write_header(uint16_t opcode, uint16_t len)
     monitor_write(&hdr, sizeof(hdr));
 
 #if MYNEWT_VAL(BLE_MONITOR_RTT) && MYNEWT_VAL(BLE_MONITOR_RTT_BUFFERED)
-    if (rtt_drops.dropped) {
+    if (rtt_drops.dropped)
+    {
         monitor_write(&rtt_drops.drops_hdr, sizeof(rtt_drops.drops_hdr));
     }
 #endif
@@ -270,8 +285,8 @@ btmon_write(FILE *instance, const char *bp, size_t n)
     return n;
 }
 
-static FILE *btmon = (FILE *) &(struct File) {
-    .vmt = &(struct File_methods) {
+static FILE *btmon = (FILE *)&(struct File){
+    .vmt = &(struct File_methods){
         .write = btmon_write,
     },
 };
@@ -295,8 +310,7 @@ drops_tmp_cb(struct ble_npl_event *ev)
 }
 #endif
 
-void
-ble_monitor_init(void)
+void ble_monitor_init(void)
 {
     SYSINIT_ASSERT_ACTIVE();
 
@@ -343,12 +357,11 @@ ble_monitor_init(void)
     ble_npl_mutex_init(&lock);
 
 #if BLE_MONITOR
-    ble_monitor_new_index(0, (uint8_t[6]){ }, "nimble0");
+    ble_monitor_new_index(0, (uint8_t[6]){}, "nimble0");
 #endif
 }
 
-int
-ble_monitor_send(uint16_t opcode, const void *data, size_t len)
+int ble_monitor_send(uint16_t opcode, const void *data, size_t len)
 {
     ble_npl_mutex_pend(&lock, OS_TIMEOUT_NEVER);
 
@@ -360,14 +373,14 @@ ble_monitor_send(uint16_t opcode, const void *data, size_t len)
     return 0;
 }
 
-int
-ble_monitor_send_om(uint16_t opcode, const struct os_mbuf *om)
+int ble_monitor_send_om(uint16_t opcode, const struct os_mbuf *om)
 {
     const struct os_mbuf *om_tmp;
     uint16_t length = 0;
 
     om_tmp = om;
-    while (om_tmp) {
+    while (om_tmp)
+    {
         length += om_tmp->om_len;
         om_tmp = SLIST_NEXT(om_tmp, om_next);
     }
@@ -376,7 +389,8 @@ ble_monitor_send_om(uint16_t opcode, const struct os_mbuf *om)
 
     monitor_write_header(opcode, length);
 
-    while (om) {
+    while (om)
+    {
         monitor_write(om->om_data, om->om_len);
         om = SLIST_NEXT(om, om_next);
     }
@@ -386,8 +400,7 @@ ble_monitor_send_om(uint16_t opcode, const struct os_mbuf *om)
     return 0;
 }
 
-int
-ble_monitor_new_index(uint8_t bus, uint8_t *addr, const char *name)
+int ble_monitor_new_index(uint8_t bus, uint8_t *addr, const char *name)
 {
     struct ble_monitor_new_index pkt;
 
@@ -402,8 +415,7 @@ ble_monitor_new_index(uint8_t bus, uint8_t *addr, const char *name)
     return 0;
 }
 
-int
-ble_monitor_log(int level, const char *fmt, ...)
+int ble_monitor_log(int level, const char *fmt, ...)
 {
     static const char id[] = "nimble";
     struct ble_monitor_user_logging ulog;
@@ -414,7 +426,8 @@ ble_monitor_log(int level, const char *fmt, ...)
     len = vsnprintf(NULL, 0, fmt, va);
     va_end(va);
 
-    switch (level) {
+    switch (level)
+    {
     case LOG_LEVEL_ERROR:
         ulog.priority = 3;
         break;
@@ -442,12 +455,13 @@ ble_monitor_log(int level, const char *fmt, ...)
     monitor_write(id, sizeof(id));
 
 #ifdef BABBLESIM
-    do {
+    do
+    {
         char *tmp;
         int len;
 
         va_start(va, fmt);
-        len =  vasprintf(&tmp, fmt, va);
+        len = vasprintf(&tmp, fmt, va);
         assert(len >= 0);
         va_end(va);
 
@@ -468,16 +482,17 @@ ble_monitor_log(int level, const char *fmt, ...)
     return 0;
 }
 
-int
-ble_monitor_out(int c)
+int ble_monitor_out(int c)
 {
     static char buf[MYNEWT_VAL(BLE_MONITOR_CONSOLE_BUFFER_SIZE)];
     static size_t len;
 
-    if (c != '\n') {
+    if (c != '\n')
+    {
         buf[len++] = c;
 
-        if (len < sizeof(buf) - 1) {
+        if (len < sizeof(buf) - 1)
+        {
             return c;
         }
     }
@@ -490,54 +505,46 @@ ble_monitor_out(int c)
     return c;
 }
 
-int
-ble_transport_to_ll_cmd(void *buf)
+int ble_transport_to_ll_cmd(void *buf)
 {
     struct ble_hci_cmd *cmd = buf;
 
-    ble_monitor_send(BLE_MONITOR_OPCODE_COMMAND_PKT, buf, cmd->length +
-                                                          sizeof(*cmd));
+    ble_monitor_send(BLE_MONITOR_OPCODE_COMMAND_PKT, buf, cmd->length + sizeof(*cmd));
 
     return ble_transport_to_ll_cmd_impl(buf);
 }
 
-int
-ble_transport_to_ll_acl(struct os_mbuf *om)
+int ble_transport_to_ll_acl(struct os_mbuf *om)
 {
     ble_monitor_send_om(BLE_MONITOR_OPCODE_ACL_TX_PKT, om);
 
     return ble_transport_to_ll_acl_impl(om);
 }
 
-int
-ble_transport_to_ll_iso(struct os_mbuf *om)
+int ble_transport_to_ll_iso(struct os_mbuf *om)
 {
     ble_monitor_send_om(BLE_MONITOR_OPCODE_ISO_TX_PKT, om);
 
     return ble_transport_to_ll_iso_impl(om);
 }
 
-int
-ble_transport_to_hs_acl(struct os_mbuf *om)
+int ble_transport_to_hs_acl(struct os_mbuf *om)
 {
     ble_monitor_send_om(BLE_MONITOR_OPCODE_ACL_RX_PKT, om);
 
     return ble_transport_to_hs_acl_impl(om);
 }
 
-int
-ble_transport_to_hs_evt(void *buf)
+int ble_transport_to_hs_evt(void *buf)
 {
     struct ble_hci_ev *ev = buf;
 
-    ble_monitor_send(BLE_MONITOR_OPCODE_EVENT_PKT, buf, ev->length +
-                                                        sizeof(*ev));
+    ble_monitor_send(BLE_MONITOR_OPCODE_EVENT_PKT, buf, ev->length + sizeof(*ev));
 
     return ble_transport_to_hs_evt_impl(buf);
 }
 
-int
-ble_transport_to_hs_iso(struct os_mbuf *om)
+int ble_transport_to_hs_iso(struct os_mbuf *om)
 {
     ble_monitor_send_om(BLE_MONITOR_OPCODE_ISO_RX_PKT, om);
 

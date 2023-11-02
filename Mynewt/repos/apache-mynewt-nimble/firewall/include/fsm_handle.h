@@ -27,4 +27,7 @@ bool ifw_dc_l2cap_parser(struct os_mbuf *rxpdu);
 #define IFW_DC_L2CAP_PARSER(rxpdu) \
     (ifw_dc_l2cap_parser(rxpdu) == IFW_VERIFICATION_REJECT)
 
+#define IFW_SMP_PARSER(chan) \
+    (ifw_smp_parser(chan) == IFW_VERIFICATION_REJECT)
+
 #endif // FSM_HANDLE_H

@@ -1821,11 +1821,7 @@ void bt_l2cap_recv(struct bt_conn *conn, struct net_buf *buf)
 	// IFW below
 	// IFW_DEBUG_LOG("Invoke bt_l2cap_recv here.");
 
-	int res;
-
-	res = IFW_L2CAP_PACKET_PARSER(conn, buf);
-
-	if (res == IFW_OPERATION_REJECT) {
+	if (IFW_L2CAP_PACKET_PARSER(conn, buf)) {
 		net_buf_unref(buf);
 		return 0;
 	}

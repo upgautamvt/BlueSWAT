@@ -3837,7 +3837,7 @@ void ble_ll_conn_rx_data_pdu(struct os_mbuf *rxpdu, struct ble_mbuf_hdr *hdr)
         MODLOG_DFLT(INFO, "Rx'd ctrl PDU; opcode=%d\n", rxbuf[2] & 0x3f); // the opcode is calculated by Copilot, may not be correct
 
         // IFW Session Parser
-        if (IFW_DC_LL_CTRL_PARSER(connsm, rxpdu) == IFW_VERIFICATION_REJECT)
+        if (IFW_DC_LL_CTRL_PARSER(connsm, rxpdu))
         {
             goto conn_rx_data_pdu_end;
         }
@@ -3856,7 +3856,7 @@ void ble_ll_conn_rx_data_pdu(struct os_mbuf *rxpdu, struct ble_mbuf_hdr *hdr)
         MODLOG_DFLT(INFO, "Rx'd data PDU; llid=%d, len=%d\n", llid, acl_len);
 
         // IFW Session Parser
-        if (IFW_DC_L2CAP_PARSER(rxpdu) == IFW_VERIFICATION_REJECT)
+        if (IFW_DC_L2CAP_PARSER(rxpdu))
         {
             goto conn_rx_data_pdu_end;
         }
