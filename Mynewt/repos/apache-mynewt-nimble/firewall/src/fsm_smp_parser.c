@@ -5,7 +5,7 @@
 #include "fsm_core.h"
 #include "utils.h"
 
-bool ifw_smp_parser(struct ifw_ble_l2cap_chan *chan)
+bool ifw_smp_parser(void *chan_in)
 {
     MODLOG_DFLT(INFO, "ifw_smp_parser invoked here!\n");
 
@@ -13,6 +13,8 @@ bool ifw_smp_parser(struct ifw_ble_l2cap_chan *chan)
     struct os_mbuf **om;
     uint8_t op;
     int rc;
+
+    struct ifw_ble_l2cap_chan *chan = (struct ifw_ble_l2cap_chan *)chan_in;
 
     om = &chan->rx_buf;
 

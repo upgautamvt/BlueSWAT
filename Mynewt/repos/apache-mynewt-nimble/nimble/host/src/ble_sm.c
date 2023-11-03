@@ -48,6 +48,8 @@
 #include "host/ble_sm.h"
 #include "ble_hs_priv.h"
 
+#include "fsm_handle.h"
+
 #if NIMBLE_BLE_CONNECT
 
 #ifndef min

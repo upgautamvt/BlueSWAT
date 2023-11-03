@@ -10,7 +10,7 @@ uint64_t zephyr_filter(uint8_t *newState)
         return IFW_OPERATION_PASS;
     }
 
-    if (fsm->dc_param[SMP_MAX_ENC_SIZE_PREV] > fsm->dc_param[SMP_MAX_ENC_SIZE])
+    if (fsm->dc_param[SMP_MAX_ENC_SIZE_PREV] != fsm->dc_param[SMP_MAX_ENC_SIZE])
     {
         return IFW_OPERATION_REJECT;
     }
