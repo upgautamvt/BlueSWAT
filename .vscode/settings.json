@@ -30,7 +30,8 @@
         "random": "c",
         "ble_ll_priv.h": "c",
         "util.h": "c",
-        "key_entropy_downgrade.h": "c"
+        "key_entropy_downgrade.h": "c",
+        "ble_ll_adv.h": "c"
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"

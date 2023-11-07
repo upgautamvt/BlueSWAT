@@ -846,8 +846,7 @@ void ble_ll_wfr_timer_exp(void *arg)
  *
  */
 #if MYNEWT_VAL(BLE_LL_ROLE_CENTRAL) || MYNEWT_VAL(BLE_LL_ROLE_PERIPHERAL)
-static void
-ble_ll_tx_pkt_in(void)
+static void ble_ll_tx_pkt_in(void)
 {
     uint16_t handle;
     uint16_t length;

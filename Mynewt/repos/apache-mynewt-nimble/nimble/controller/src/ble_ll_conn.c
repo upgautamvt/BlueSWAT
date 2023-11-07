@@ -1151,8 +1151,7 @@ ble_ll_conn_adjust_pyld_len(struct ble_ll_conn_sm *connsm, uint16_t pyld_len)
     return ret;
 }
 
-static int
-ble_ll_conn_tx_pdu(struct ble_ll_conn_sm *connsm)
+static int ble_ll_conn_tx_pdu(struct ble_ll_conn_sm *connsm)
 {
     int rc;
     uint8_t md;
@@ -1597,6 +1596,11 @@ conn_tx_pdu:
             STATS_INCN(ble_ll_conn_stats, tx_l2cap_bytes, cur_txlen);
         }
     }
+
+    // IFW BELOW
+    IFW_LL_TX_PARSER(ble_hdr, m, connsm);
+    // IFW ABOVE
+
     return rc;
 }
 
@@ -3833,8 +3837,8 @@ void ble_ll_conn_rx_data_pdu(struct os_mbuf *rxpdu, struct ble_mbuf_hdr *hdr)
 
     if (llid == BLE_LL_LLID_CTRL)
     {
-        // LL control packet
-        MODLOG_DFLT(INFO, "Rx'd ctrl PDU; opcode=%d\n", rxbuf[2] & 0x3f); // the opcode is calculated by Copilot, may not be correct
+        // LL control packet, the opcode is calculated by Copilot, may not be correct
+        MODLOG_DFLT(INFO, "Rx'd ctrl PDU; opcode=%d\n", rxbuf[2] & 0x3f);
 
         // IFW Session Parser
         if (IFW_DC_LL_CTRL_PARSER(connsm, rxpdu))

@@ -106,6 +106,8 @@ typedef enum
     CHANNEL_HOP,
     SCAN_RSP_LEN,
     LLL_INTERVAL,
+    TX_OPCODE,
+    TX_IS_CTRL,
 
     // end
     IFW_CONN_PARAM_NUM,
