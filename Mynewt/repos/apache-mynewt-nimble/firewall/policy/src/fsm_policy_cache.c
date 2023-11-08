@@ -10,6 +10,7 @@
 #include "fsm_core.h"
 // #include "include/ebpf_helper.h"
 #include "utils.h"
+#include "fsm_lib_hdr.h"
 
 // import policy eBPF bytecode
 #include "conn_chan_map.h"
@@ -111,9 +112,8 @@ void register_policy(int class, int type, int pid)
     if (policy_manager.policy[class][type] == NULL)
     {
         // add a new policy to manager
-        // IFW_DEBUG_LOG("Add a new policy to manager");
-
-        // printf("Register new policy PID: %d\n", pid);
+        MODLOG_DFLT(INFO, "Add a new policy to manager\n");
+        MODLOG_DFLT(INFO, "New policy PID: %d\n", pid);
 
         struct fsm_policy_list *new_policy =
             ebpf_malloc(sizeof(struct fsm_policy_list));
@@ -126,9 +126,8 @@ void register_policy(int class, int type, int pid)
     else
     {
         // add new policy into list
-        // IFW_DEBUG_LOG("Add new policy into list.");
-
-        // printf("Register old policy PID: %d\n", pid);
+        MODLOG_DFLT(INFO, "Add a new policy to list\n");
+        MODLOG_DFLT(INFO, "New policy PID: %d\n", pid);
 
         struct fsm_policy_list *policy =
             policy_manager.policy[class][type];

@@ -9,7 +9,7 @@ bool ifw_ble_ll_conn_periph_start(uint8_t *rxbuf);
 
 bool ifw_dc_ll_ctrl_parser(struct ble_ll_conn_sm *connsm, struct os_mbuf *rxpdu)
 {
-    MODLOG_DFLT(INFO, "ifw_dc_ll_ctrl_parser invoked here!\n");
+    // MODLOG_DFLT(INFO, "ifw_dc_ll_ctrl_parser invoked here!\n");
 
     return IFW_OPERATION_PASS;
 }
@@ -36,7 +36,7 @@ bool ifw_adv_ll_parser(uint8_t ptype, uint8_t *rxbuf, struct ble_mbuf_hdr *hdr)
             return IFW_OPERATION_REJECT;
         }
 
-        MODLOG_DFLT(INFO, "ifw_adv_ll_parser: channel map: %x\n", chan_map_check);
+        // MODLOG_DFLT(INFO, "ifw_adv_ll_parser: channel map: %x\n", chan_map_check);
 
         if (ifw_ble_ll_conn_periph_start(rxbuf) == IFW_OPERATION_REJECT)
         {

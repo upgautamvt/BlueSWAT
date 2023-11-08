@@ -20,6 +20,9 @@ bool ifw_dc_l2cap_parser(struct os_mbuf *rxpdu);
 bool ifw_smp_parser(void *chan);
 void ifw_ll_tx_parser(struct ble_mbuf_hdr *ble_hdr, struct os_mbuf *m, struct ble_ll_conn_sm *connsm);
 
+extern struct fsm_policy;
+bool ifw_add_policy(struct fsm_policy policy, void *dst)
+
 #define IFW_ADV_LL_PARSER(ptype, rxbuf, hdr) \
     (ifw_adv_ll_parser(ptype, rxbuf, hdr) == IFW_VERIFICATION_REJECT)
 
@@ -33,5 +36,7 @@ void ifw_ll_tx_parser(struct ble_mbuf_hdr *ble_hdr, struct os_mbuf *m, struct bl
     (ifw_smp_parser(chan) == IFW_VERIFICATION_REJECT)
 
 #define IFW_LL_TX_PARSER(ble_hdr, m, connsm) ifw_ll_tx_parser(ble_hdr, m, connsm)
+
+#define IFW_ADD_POLICY(policy, dst) ifw_add_policy(policy, dst)
 
 #endif // FSM_HANDLE_H

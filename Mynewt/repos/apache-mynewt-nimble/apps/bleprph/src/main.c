@@ -314,11 +314,8 @@ bleprph_on_sync(void)
  *
  * @return int NOTE: this function should never return!
  */
-static int
-main_fn(int argc, char **argv)
+static int main_fn(int argc, char **argv)
 {
-    MODLOG_DFLT(INFO, "bleprph starting\n");
-
 #if MYNEWT_VAL(BLE_SVC_DIS_FIRMWARE_REVISION_READ_PERM) >= 0
     struct image_version ver;
     static char ver_str[IMGMGR_NMGR_MAX_VER];
@@ -327,6 +324,8 @@ main_fn(int argc, char **argv)
 
     /* Initialize OS */
     sysinit();
+
+    MODLOG_DFLT(INFO, "bleprph starting\n");
 
     /* Initialize the NimBLE host configuration. */
     ble_hs_cfg.reset_cb = bleprph_on_reset;
@@ -376,8 +375,6 @@ main_fn(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-    MODLOG_DFLT(INFO, "Hello, world!\n");
-
 #if BABBLESIM
     extern void bsim_init(int argc, char **argv, void *main_fn);
     bsim_init(argc, argv, main_fn);
