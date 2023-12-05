@@ -7,6 +7,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
+#ifndef IFW_FSM_CONN_INTERNAL_H_
+#define IFW_FSM_CONN_INTERNAL_H_
+
 typedef enum __packed {
 	BT_CONN_DISCONNECTED,
 	BT_CONN_CONNECT_SCAN,
@@ -290,3 +294,5 @@ struct k_sem *bt_conn_get_pkts(struct bt_conn *conn);
 /* k_poll related helpers for the TX thread */
 int bt_conn_prepare_events(struct k_poll_event events[]);
 void bt_conn_process_tx(struct bt_conn *conn);
+
+#endif /* IFW_FSM_CONN_INTERNAL_H_ */

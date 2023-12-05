@@ -9,6 +9,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#ifndef IFW_FSM_SMP_H_
+#define IFW_FSM_SMP_H_
+
 #include "include/bluetooth/l2cap.h"
 
 enum {
@@ -260,3 +263,5 @@ int bt_smp_sign(struct bt_conn *conn, struct net_buf *buf);
 
 /** Generate IRK from Identity Root (IR) */
 int bt_smp_irk_get(u8_t *ir, u8_t *irk);
+
+#endif /* IFW_FSM_SMP_H_ */

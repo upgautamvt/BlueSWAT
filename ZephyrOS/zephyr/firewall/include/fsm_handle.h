@@ -2,6 +2,7 @@
 #define FSM_HANDLE_H
 
 #include "fsm_core.h"
+#include "fsm_lib_hdr.h"
 
 // whether to use JIT interpretation
 #define JIT_OFF 0
