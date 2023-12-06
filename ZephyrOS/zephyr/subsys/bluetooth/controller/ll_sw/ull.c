@@ -56,10 +56,9 @@
 #include "common/log.h"
 #include "hal/debug.h"
 
-// mymacro
-#if defined(CONFIG_USE_PERIPHERAL_FILTER)
+// IFW below
 #include "fsm_handle.h"
-#endif
+// IFW above
 
 /* Define ticker nodes and user operations */
 #if defined(CONFIG_BT_CTLR_LOW_LAT) &&                                         \
@@ -1595,8 +1594,6 @@ while (link)
 				      struct node_rx_hdr * rx)
 	{
 		// IFW below
-		IFW_LL_PACKET_PARSER(link, rx);
-
 		if (IFW_LL_PACKET_PARSER(link, rx)) {
 			// IFW_DEBUG_LOG_CHECK_FAILURE("Packet drop.");
 			// ll_rx_put(link, rx);

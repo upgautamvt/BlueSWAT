@@ -22,10 +22,6 @@
 #include <bluetooth/conn.h>
 #include <bluetooth/hci.h>
 
-// IFW below
-
-// IFW above
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -48,16 +44,16 @@ extern "C" {
 struct bt_l2cap_chan;
 
 /** @typedef bt_l2cap_chan_destroy_t
- *  @brief Channel destroy callback
- *
- *  @param chan Channel object.
- */
+     *  @brief Channel destroy callback
+     *
+     *  @param chan Channel object.
+     */
 typedef void (*bt_l2cap_chan_destroy_t)(struct bt_l2cap_chan *chan);
 
 /** @brief Life-span states of L2CAP CoC channel. Used only by internal APIs
- *  dealing with setting channel to proper state depending on operational
- *  context.
- */
+     *  dealing with setting channel to proper state depending on operational
+     *  context.
+     */
 typedef enum bt_l2cap_chan_state {
 	/** Channel disconnected */
 	BT_L2CAP_DISCONNECTED,
@@ -78,10 +74,10 @@ typedef enum bt_l2cap_chan_status {
 	BT_L2CAP_STATUS_OUT,
 
 	/** Channel shutdown status
-	 *
-	 * Once this status is notified it means the channel will no longer be
-	 * able to transmit or receive data.
-	 */
+         *
+         * Once this status is notified it means the channel will no longer be
+         * able to transmit or receive data.
+         */
 	BT_L2CAP_STATUS_SHUTDOWN,
 
 	/* Total number of status - must be at the end of the enum */
@@ -188,82 +184,82 @@ struct bt_l2cap_br_chan {
 /** @brief L2CAP Channel operations structure. */
 struct bt_l2cap_chan_ops {
 	/** Channel connected callback
-	 *
-	 *  If this callback is provided it will be called whenever the
-	 *  connection completes.
-	 *
-	 *  @param chan The channel that has been connected
-	 */
+         *
+         *  If this callback is provided it will be called whenever the
+         *  connection completes.
+         *
+         *  @param chan The channel that has been connected
+         */
 	void (*connected)(struct bt_l2cap_chan *chan);
 
 	/** Channel disconnected callback
-	 *
-	 *  If this callback is provided it will be called whenever the
-	 *  channel is disconnected, including when a connection gets
-	 *  rejected.
-	 *
-	 *  @param chan The channel that has been Disconnected
-	 */
+         *
+         *  If this callback is provided it will be called whenever the
+         *  channel is disconnected, including when a connection gets
+         *  rejected.
+         *
+         *  @param chan The channel that has been Disconnected
+         */
 	void (*disconnected)(struct bt_l2cap_chan *chan);
 
 	/** Channel encrypt_change callback
-	 *
-	 *  If this callback is provided it will be called whenever the
-	 *  security level changed (indirectly link encryption done) or
-	 *  authentication procedure fails. In both cases security initiator
-	 *  and responder got the final status (HCI status) passed by
-	 *  related to encryption and authentication events from local host's
-	 *  controller.
-	 *
-	 *  @param chan The channel which has made encryption status changed.
-	 *  @param status HCI status of performed security procedure caused
-	 *  by channel security requirements. The value is populated
-	 *  by HCI layer and set to 0 when success and to non-zero (reference to
-	 *  HCI Error Codes) when security/authentication failed.
-	 */
+         *
+         *  If this callback is provided it will be called whenever the
+         *  security level changed (indirectly link encryption done) or
+         *  authentication procedure fails. In both cases security initiator
+         *  and responder got the final status (HCI status) passed by
+         *  related to encryption and authentication events from local host's
+         *  controller.
+         *
+         *  @param chan The channel which has made encryption status changed.
+         *  @param status HCI status of performed security procedure caused
+         *  by channel security requirements. The value is populated
+         *  by HCI layer and set to 0 when success and to non-zero (reference to
+         *  HCI Error Codes) when security/authentication failed.
+         */
 	void (*encrypt_change)(struct bt_l2cap_chan *chan, u8_t hci_status);
 
 	/** Channel alloc_buf callback
-	 *
-	 *  If this callback is provided the channel will use it to allocate
-	 *  buffers to store incoming data.
-	 *
-	 *  @param chan The channel requesting a buffer.
-	 *
-	 *  @return Allocated buffer.
-	 */
+         *
+         *  If this callback is provided the channel will use it to allocate
+         *  buffers to store incoming data.
+         *
+         *  @param chan The channel requesting a buffer.
+         *
+         *  @return Allocated buffer.
+         */
 	struct net_buf *(*alloc_buf)(struct bt_l2cap_chan *chan);
 
 	/** Channel recv callback
-	 *
-	 *  @param chan The channel receiving data.
-	 *  @param buf Buffer containing incoming data.
-	 *
-	 *  @return 0 in case of success or negative value in case of error.
-	 *  If -EINPROGRESS is returned user has to confirm once the data has
-	 *  been processed by calling bt_l2cap_chan_recv_complete passing back
-	 *  the buffer received with its original user_data which contains the
-	 *  number of segments/credits used by the packet.
-	 */
+         *
+         *  @param chan The channel receiving data.
+         *  @param buf Buffer containing incoming data.
+         *
+         *  @return 0 in case of success or negative value in case of error.
+         *  If -EINPROGRESS is returned user has to confirm once the data has
+         *  been processed by calling bt_l2cap_chan_recv_complete passing back
+         *  the buffer received with its original user_data which contains the
+         *  number of segments/credits used by the packet.
+         */
 	int (*recv)(struct bt_l2cap_chan *chan, struct net_buf *buf);
 
 	/*  Channel sent callback
-	 *
-	 *  If this callback is provided it will be called whenever a SDU has
-	 *  been completely sent.
-	 *
-	 *  @param chan The channel which has sent data.
-	 */
+         *
+         *  If this callback is provided it will be called whenever a SDU has
+         *  been completely sent.
+         *
+         *  @param chan The channel which has sent data.
+         */
 	void (*sent)(struct bt_l2cap_chan *chan);
 
 	/*  Channel status callback
-	 *
-	 *  If this callback is provided it will be called whenever the
-	 *  channel status changes.
-	 *
-	 *  @param chan The channel which status changed
-	 *  @param status The channel status
-	 */
+         *
+         *  If this callback is provided it will be called whenever the
+         *  channel status changes.
+         *
+         *  @param chan The channel which status changed
+         *  @param status The channel status
+         */
 	void (*status)(struct bt_l2cap_chan *chan, atomic_t *status);
 };
 
@@ -275,131 +271,131 @@ struct bt_l2cap_chan_ops {
 /** @brief L2CAP Server structure. */
 struct bt_l2cap_server {
 	/** Server PSM. Possible values:
-	 *
-	 *  0               A dynamic value will be auto-allocated when
-	 *                  bt_l2cap_server_register() is called.
-	 *
-	 *  0x0001-0x007f   Standard, Bluetooth SIG-assigned fixed values.
-	 *
-	 *  0x0080-0x00ff   Dynamically allocated. May be pre-set by the
-	 *                  application before server registration (not
-	 *                  recommended however), or auto-allocated by the
-	 *                  stack if the app gave 0 as the value.
-	 */
+         *
+         *  0               A dynamic value will be auto-allocated when
+         *                  bt_l2cap_server_register() is called.
+         *
+         *  0x0001-0x007f   Standard, Bluetooth SIG-assigned fixed values.
+         *
+         *  0x0080-0x00ff   Dynamically allocated. May be pre-set by the
+         *                  application before server registration (not
+         *                  recommended however), or auto-allocated by the
+         *                  stack if the app gave 0 as the value.
+         */
 	u16_t psm;
 
 	/** Required minimim security level */
 	bt_security_t sec_level;
 
 	/** Server accept callback
-	 *
-	 *  This callback is called whenever a new incoming connection requires
-	 *  authorization.
-	 *
-	 *  @param conn The connection that is requesting authorization
-	 *  @param chan Pointer to received the allocated channel
-	 *
-	 *  @return 0 in case of success or negative value in case of error.
-	 *  Possible return values:
-	 *  -ENOMEM if no available space for new channel.
-	 *  -EACCES if application did not authorize the connection.
-	 *  -EPERM if encryption key size is too short.
-	 */
+         *
+         *  This callback is called whenever a new incoming connection requires
+         *  authorization.
+         *
+         *  @param conn The connection that is requesting authorization
+         *  @param chan Pointer to received the allocated channel
+         *
+         *  @return 0 in case of success or negative value in case of error.
+         *  Possible return values:
+         *  -ENOMEM if no available space for new channel.
+         *  -EACCES if application did not authorize the connection.
+         *  -EPERM if encryption key size is too short.
+         */
 	int (*accept)(struct bt_conn *conn, struct bt_l2cap_chan **chan);
 
 	sys_snode_t node;
 };
 
 /** @brief Register L2CAP server.
- *
- *  Register L2CAP server for a PSM, each new connection is authorized using
- *  the accept() callback which in case of success shall allocate the channel
- *  structure to be used by the new connection.
- *
- *  For fixed, SIG-assigned PSMs (in the range 0x0001-0x007f) the PSM should
- *  be assigned to server->psm before calling this API. For dynamic PSMs
- *  (in the range 0x0080-0x00ff) server->psm may be pre-set to a given value
- *  (this is however not recommended) or be left as 0, in which case upon
- *  return a newly allocated value will have been assigned to it. For
- *  dynamically allocated values the expectation is that it's exposed through
- *  a GATT service, and that's how L2CAP clients discover how to connect to
- *  the server.
- *
- *  @param server Server structure.
- *
- *  @return 0 in case of success or negative value in case of error.
- */
+     *
+     *  Register L2CAP server for a PSM, each new connection is authorized using
+     *  the accept() callback which in case of success shall allocate the channel
+     *  structure to be used by the new connection.
+     *
+     *  For fixed, SIG-assigned PSMs (in the range 0x0001-0x007f) the PSM should
+     *  be assigned to server->psm before calling this API. For dynamic PSMs
+     *  (in the range 0x0080-0x00ff) server->psm may be pre-set to a given value
+     *  (this is however not recommended) or be left as 0, in which case upon
+     *  return a newly allocated value will have been assigned to it. For
+     *  dynamically allocated values the expectation is that it's exposed through
+     *  a GATT service, and that's how L2CAP clients discover how to connect to
+     *  the server.
+     *
+     *  @param server Server structure.
+     *
+     *  @return 0 in case of success or negative value in case of error.
+     */
 int bt_l2cap_server_register(struct bt_l2cap_server *server);
 
 /** @brief Register L2CAP server on BR/EDR oriented connection.
- *
- *  Register L2CAP server for a PSM, each new connection is authorized using
- *  the accept() callback which in case of success shall allocate the channel
- *  structure to be used by the new connection.
- *
- *  @param server Server structure.
- *
- *  @return 0 in case of success or negative value in case of error.
- */
+     *
+     *  Register L2CAP server for a PSM, each new connection is authorized using
+     *  the accept() callback which in case of success shall allocate the channel
+     *  structure to be used by the new connection.
+     *
+     *  @param server Server structure.
+     *
+     *  @return 0 in case of success or negative value in case of error.
+     */
 int bt_l2cap_br_server_register(struct bt_l2cap_server *server);
 
 /** @brief Connect L2CAP channel
- *
- *  Connect L2CAP channel by PSM, once the connection is completed channel
- *  connected() callback will be called. If the connection is rejected
- *  disconnected() callback is called instead.
- *  Channel object passed (over an address of it) as second parameter shouldn't
- *  be instantiated in application as standalone. Instead of, application should
- *  create transport dedicated L2CAP objects, i.e. type of bt_l2cap_le_chan for
- *  LE and/or type of bt_l2cap_br_chan for BR/EDR. Then pass to this API
- *  the location (address) of bt_l2cap_chan type object which is a member
- *  of both transport dedicated objects.
- *
- *  @param conn Connection object.
- *  @param chan Channel object.
- *  @param psm Channel PSM to connect to.
- *
- *  @return 0 in case of success or negative value in case of error.
- */
+     *
+     *  Connect L2CAP channel by PSM, once the connection is completed channel
+     *  connected() callback will be called. If the connection is rejected
+     *  disconnected() callback is called instead.
+     *  Channel object passed (over an address of it) as second parameter shouldn't
+     *  be instantiated in application as standalone. Instead of, application should
+     *  create transport dedicated L2CAP objects, i.e. type of bt_l2cap_le_chan for
+     *  LE and/or type of bt_l2cap_br_chan for BR/EDR. Then pass to this API
+     *  the location (address) of bt_l2cap_chan type object which is a member
+     *  of both transport dedicated objects.
+     *
+     *  @param conn Connection object.
+     *  @param chan Channel object.
+     *  @param psm Channel PSM to connect to.
+     *
+     *  @return 0 in case of success or negative value in case of error.
+     */
 int bt_l2cap_chan_connect(struct bt_conn *conn, struct bt_l2cap_chan *chan,
 			  u16_t psm);
 
 /** @brief Disconnect L2CAP channel
- *
- *  Disconnect L2CAP channel, if the connection is pending it will be
- *  canceled and as a result the channel disconnected() callback is called.
- *  Regarding to input parameter, to get details see reference description
- *  to bt_l2cap_chan_connect() API above.
- *
- *  @param chan Channel object.
- *
- *  @return 0 in case of success or negative value in case of error.
- */
+     *
+     *  Disconnect L2CAP channel, if the connection is pending it will be
+     *  canceled and as a result the channel disconnected() callback is called.
+     *  Regarding to input parameter, to get details see reference description
+     *  to bt_l2cap_chan_connect() API above.
+     *
+     *  @param chan Channel object.
+     *
+     *  @return 0 in case of success or negative value in case of error.
+     */
 int bt_l2cap_chan_disconnect(struct bt_l2cap_chan *chan);
 
 /** @brief Send data to L2CAP channel
- *
- *  Send data from buffer to the channel. If credits are not available, buf will
- *  be queued and sent as and when credits are received from peer.
- *  Regarding to first input parameter, to get details see reference description
- *  to bt_l2cap_chan_connect() API above.
- *
- *  @return Bytes sent in case of success or negative value in case of error.
- */
+     *
+     *  Send data from buffer to the channel. If credits are not available, buf will
+     *  be queued and sent as and when credits are received from peer.
+     *  Regarding to first input parameter, to get details see reference description
+     *  to bt_l2cap_chan_connect() API above.
+     *
+     *  @return Bytes sent in case of success or negative value in case of error.
+     */
 int bt_l2cap_chan_send(struct bt_l2cap_chan *chan, struct net_buf *buf);
 
 /** @brief Complete receiving L2CAP channel data
- *
- * Complete the reception of incoming data. This shall only be called if the
- * channel recv callback has returned -EINPROGRESS to process some incoming
- * data. The buffer shall contain the original user_data as that is used for
- * storing the credits/segments used by the packet.
- *
- * @param chan Channel object.
- * @param buf Buffer containing the data.
- *
- *  @return 0 in case of success or negative value in case of error.
- */
+     *
+     * Complete the reception of incoming data. This shall only be called if the
+     * channel recv callback has returned -EINPROGRESS to process some incoming
+     * data. The buffer shall contain the original user_data as that is used for
+     * storing the credits/segments used by the packet.
+     *
+     * @param chan Channel object.
+     * @param buf Buffer containing the data.
+     *
+     *  @return 0 in case of success or negative value in case of error.
+     */
 int bt_l2cap_chan_recv_complete(struct bt_l2cap_chan *chan,
 				struct net_buf *buf);
 

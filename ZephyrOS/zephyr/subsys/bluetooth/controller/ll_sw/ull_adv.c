@@ -51,7 +51,7 @@
 #include "hal/debug.h"
 
 // IFW below
-#include "fsm_handle.h"
+// #include "fsm_handle.h"
 // IFW above
 
 #define ULL_ADV_RANDOM_DELAY HAL_TICKER_US_TO_TICKS(10000)

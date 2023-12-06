@@ -12,23 +12,6 @@
 #include "subsys/bluetooth/controller/ll_sw/pdu.h"
 #include "subsys/bluetooth/controller/ll_sw/ull_conn_types.h"
 
-// #ifndef BT_L2CAP_HDR_
-// #define BT_L2CAP_HDR_
-// struct bt_l2cap_hdr {
-// 	uint16_t len;
-// 	uint16_t cid;
-// } __attribute__((packed));
-// #endif
-
-// #ifndef BT_L2CAP_SIG_HDR_
-// #define BT_L2CAP_SIG_HDR_
-// struct bt_l2cap_sig_hdr {
-// 	u8_t code;
-// 	u8_t ident;
-// 	u16_t len;
-// } __packed;
-// #endif
-
 // // for L2CAP packet parser
 #define BT_L2CAP_CMD_REJECT 0x01
 #define BT_L2CAP_DISCONN_REQ 0x06

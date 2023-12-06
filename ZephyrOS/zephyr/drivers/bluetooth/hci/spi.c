@@ -19,7 +19,7 @@
 #define LOG_MODULE_NAME bt_driver
 #include "common/log.h"
 
-#include "fsm_handle.h"
+// #include "fsm_handle.h"
 
 #define HCI_CMD 0x01
 #define HCI_ACL 0x02

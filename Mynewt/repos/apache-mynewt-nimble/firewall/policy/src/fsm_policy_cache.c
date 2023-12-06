@@ -70,6 +70,19 @@ void set_all_policy_jit_on()
     // DEBUG_LOG("Set JIT on for all policies.");
 }
 
+void ifw_fsm_enable(bool jit)
+{
+    load_all_policies();
+
+    if (jit)
+    {
+        // disable_mpu_for_jit();
+        set_all_policy_jit_on();
+    }
+
+    // IFW_DEBUG_LOG("FSM rules loaded success.");
+}
+
 // init policy manager
 static void init_policy_manager()
 {
@@ -111,7 +124,9 @@ void register_policy(int class, int type, int pid)
 
     if (policy_manager.policy[class][type] == NULL)
     {
-        // add a new policy to manager
+        /*
+            There is no policy of (class, type) registered before. We init a new fsm_policy_list here.
+        */
         MODLOG_DFLT(INFO, "Add a new policy to manager\n");
         MODLOG_DFLT(INFO, "New policy PID: %d\n", pid);
 
@@ -125,10 +140,13 @@ void register_policy(int class, int type, int pid)
     }
     else
     {
-        // add new policy into list
+        /*
+            There is some policies of (class, type) registered before. We add a new policy to the list.
+        */
         MODLOG_DFLT(INFO, "Add a new policy to list\n");
         MODLOG_DFLT(INFO, "New policy PID: %d\n", pid);
 
+        // point the new policy to the head of (class, type) list.
         struct fsm_policy_list *policy =
             policy_manager.policy[class][type];
 
@@ -143,6 +161,8 @@ void register_policy(int class, int type, int pid)
         policy->policy_next->policy_next = NULL;
     }
 }
+
+void remove_policy(int class, int type, int pid) {}
 
 ebpf_vm *g_vm = NULL, *g_jit_vm = NULL;
 

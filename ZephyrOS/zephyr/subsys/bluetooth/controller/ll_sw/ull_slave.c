@@ -45,9 +45,7 @@
 #include "hal/debug.h"
 
 // mymacro
-#if defined(CONFIG_USE_PERIPHERAL_FILTER)
-#include "fsm_handle.h"
-#endif
+// #include "fsm_handle.h"
 
 static void ticker_op_stop_adv_cb(u32_t status, void *param);
 static void ticker_op_cb(u32_t status, void *param);

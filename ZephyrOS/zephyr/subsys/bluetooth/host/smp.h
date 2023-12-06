@@ -12,7 +12,7 @@
 #ifndef IFW_FSM_SMP_H_
 #define IFW_FSM_SMP_H_
 
-#include "include/bluetooth/l2cap.h"
+#include <bluetooth/l2cap.h>
 
 enum {
 	SMP_FLAG_CFM_DELAYED, /* if confirm should be send when TK is valid */

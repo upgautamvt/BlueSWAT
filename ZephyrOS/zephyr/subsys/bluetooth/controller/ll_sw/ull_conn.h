@@ -3,8 +3,8 @@
 #ifndef ULL_CONN_H
 #define ULL_CONN_H
 
-#include "include/zephyr/types.h"
-#include "fsm_lib_hdr.h"
+#include <zephyr/types.h>
+// #include "fsm_lib_hdr.h"
 
 #ifndef CONFIG_BT_CTLR_LLCP_CONN
 #define CONFIG_BT_CTLR_LLCP_CONN 1

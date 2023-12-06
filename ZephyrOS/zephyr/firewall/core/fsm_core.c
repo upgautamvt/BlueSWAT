@@ -17,31 +17,33 @@ bool fsm_new_init = 0;
 
 void ifw_fsm_init()
 {
+	memset(&curFSMState, 0, sizeof(curFSMState));
+
 	for (int i = 0; i < IFW_CORE_STATE_NUM; i++) {
 		// init core state value as its num
 		curFSMState.core_state[i] = ifw_core_state_num[i];
 	}
 
-	for (int i = 0; i < IFW_SHARED_STATE_NUM; i++) {
-		// init shared state value as 0
-		curFSMState.shared_state[i] = 0;
-	}
+	// for (int i = 0; i < IFW_SHARED_STATE_NUM; i++) {
+	// 	// init shared state value as 0
+	// 	curFSMState.shared_state[i] = 0;
+	// }
 
-	for (int i = 0; i < IFW_CONN_PARAM_NUM; i++) {
-		curFSMState.conn_param[i] = 0;
-	}
+	// for (int i = 0; i < IFW_CONN_PARAM_NUM; i++) {
+	// 	curFSMState.conn_param[i] = 0;
+	// }
 
-	for (int i = 0; i < IFW_DC_PARAM_NUM; i++) {
-		curFSMState.dc_param[i] = 0;
-	}
+	// for (int i = 0; i < IFW_DC_PARAM_NUM; i++) {
+	// 	curFSMState.dc_param[i] = 0;
+	// }
 
-	for (int i = 0; i < IFW_SPI_PARAM_NUM; i++) {
-		curFSMState.spi_param[i] = 0;
-	}
+	// for (int i = 0; i < IFW_SPI_PARAM_NUM; i++) {
+	// 	curFSMState.spi_param[i] = 0;
+	// }
 
-	for (int i = 0; i < IFW_HCI_PARAM_NUM; i++) {
-		curFSMState.hci_param[i] = 0;
-	}
+	// for (int i = 0; i < IFW_HCI_PARAM_NUM; i++) {
+	// 	curFSMState.hci_param[i] = 0;
+	// }
 
 	// IFW_DEBUG_LOG("FSM core init success.");
 }
@@ -101,9 +103,9 @@ int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
 	switch (class) {
 	case SHARED:
 		// check shared state transition
-		if (type >= IFW_SHARED_STATE_NUM) {
-			return IFW_UPDATE_ERROR;
-		}
+		// if (type >= IFW_SHARED_STATE_NUM) {
+		// 	return IFW_UPDATE_ERROR;
+		// }
 
 		newFSMState.shared_state[type] = state;
 
@@ -111,10 +113,10 @@ int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
 
 	case CORE:
 		// check core state transition
-		if (type >= IFW_CORE_STATE_NUM ||
-		    state >= ifw_core_state_num[type]) {
-			return IFW_UPDATE_ERROR;
-		}
+		// if (type >= IFW_CORE_STATE_NUM ||
+		//     state >= ifw_core_state_num[type]) {
+		// 	return IFW_UPDATE_ERROR;
+		// }
 
 		newFSMState.core_state[type] = state;
 
@@ -122,9 +124,9 @@ int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
 
 	case CONN:
 		// check conn param
-		if (type >= IFW_CONN_PARAM_NUM) {
-			return IFW_UPDATE_ERROR;
-		}
+		// if (type >= IFW_CONN_PARAM_NUM) {
+		// 	return IFW_UPDATE_ERROR;
+		// }
 
 		newFSMState.conn_param[type] = state;
 
@@ -132,9 +134,9 @@ int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
 
 	case DC:
 		// check data connection param
-		if (type >= IFW_DC_PARAM_NUM) {
-			return IFW_UPDATE_ERROR;
-		}
+		// if (type >= IFW_DC_PARAM_NUM) {
+		// 	return IFW_UPDATE_ERROR;
+		// }
 
 		newFSMState.dc_param[type] = state;
 
@@ -142,9 +144,9 @@ int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
 
 	case SPI:
 		// check SPI params
-		if (type >= IFW_SPI_PARAM_NUM) {
-			return IFW_UPDATE_ERROR;
-		}
+		// if (type >= IFW_SPI_PARAM_NUM) {
+		// 	return IFW_UPDATE_ERROR;
+		// }
 
 		newFSMState.spi_param[type] = state;
 
@@ -152,9 +154,9 @@ int ifw_fsm_check_update(uint16_t state, uint16_t type, uint16_t class)
 
 	case HCI:
 		// check SPI params
-		if (type >= IFW_HCI_PARAM_NUM) {
-			return IFW_UPDATE_ERROR;
-		}
+		// if (type >= IFW_HCI_PARAM_NUM) {
+		// 	return IFW_UPDATE_ERROR;
+		// }
 
 		newFSMState.hci_param[type] = state;
 

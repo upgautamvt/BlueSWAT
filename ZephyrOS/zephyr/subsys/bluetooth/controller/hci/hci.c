@@ -57,9 +57,7 @@
 #include "common/log.h"
 #include "hal/debug.h"
 
-#ifdef CONFIG_USE_PERIPHERAL_FILTER
-#include "fsm_handle.h"
-#endif
+// #include "fsm_handle.h"
 
 /* opcode of the HCI command currently being processed. The opcode is stored
  * by hci_cmd_handle() and then used during the creation of cmd complete and
@@ -988,10 +986,6 @@ static void le_read_adv_chan_tx_power(struct net_buf *buf, struct net_buf **evt)
 
 static void le_set_adv_data(struct net_buf *buf, struct net_buf **evt)
 {
-	// IFW below
-	// IFW_DEBUG_LOG();
-	// IFW above
-
 	struct bt_hci_cp_le_set_adv_data *cmd = (void *)buf->data;
 	struct bt_hci_evt_cc_status *ccst;
 	u8_t status;
@@ -1008,10 +1002,6 @@ static void le_set_adv_data(struct net_buf *buf, struct net_buf **evt)
 
 static void le_set_scan_rsp_data(struct net_buf *buf, struct net_buf **evt)
 {
-	// IFW below
-	// IFW_DEBUG_LOG();
-	// IFW above
-
 	struct bt_hci_cp_le_set_scan_rsp_data *cmd = (void *)buf->data;
 	struct bt_hci_evt_cc_status *ccst;
 	u8_t status;

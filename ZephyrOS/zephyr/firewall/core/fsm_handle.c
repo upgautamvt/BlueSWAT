@@ -2,7 +2,7 @@
 
 #include "utils.h"
 #include "include/fsm_policy_cache.h"
-#include "fsm_lib_hdr.h"
+// #include "fsm_lib_hdr.h"
 
 static void disable_mpu_for_jit()
 {
@@ -23,19 +23,19 @@ void ifw_fsm_enable(bool jit)
 }
 
 // handle in ull.c to reset the connection
-extern void ll_rx_put(memq_link_t *link, void *rx);
+// extern void ll_rx_put(memq_link_t *link, void *rx);
 
-/**
- * @brief Permit another loop in the controller thread (prio_recv_thread)
- * @details Execution context: ULL mayfly
- */
-extern void ll_rx_sched(void);
+// /**
+//  * @brief Permit another loop in the controller thread (prio_recv_thread)
+//  * @details Execution context: ULL mayfly
+//  */
+// extern void ll_rx_sched(void);
 
-static void ll_rx_put_sched(memq_link_t *link, void *rx)
-{
-	ll_rx_put(link, rx);
-	ll_rx_sched();
-}
+// static void ll_rx_put_sched(memq_link_t *link, void *rx)
+// {
+// 	ll_rx_put(link, rx);
+// 	ll_rx_sched();
+// }
 
 // TODO
 // reset the handle after rx packet drop

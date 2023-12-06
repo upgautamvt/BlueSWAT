@@ -156,6 +156,7 @@ struct FsmState {
 	int dc_param[IFW_DC_PARAM_NUM];
 
 	int spi_param[IFW_STATE_CLASS_NUM];
+	int hci_param[IFW_HCI_PARAM_NUM];
 };
 
 // firewall macro

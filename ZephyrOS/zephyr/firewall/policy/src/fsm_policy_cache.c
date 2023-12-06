@@ -237,38 +237,38 @@ int run_fsm_check_policy(int type, int class, void *newState)
 {
 	// int tick = 0;
 	// check whether policy exists
-	switch (class) {
-	case CORE:
-		if (!(core_policy_mask & (1 << type))) {
-			return IFW_OPERATION_PASS;
-		}
-		break;
-	case SHARED:
-		if (!(shared_policy_mask & (1 << type))) {
-			return IFW_OPERATION_PASS;
-		}
-		break;
-	case CONN:
-		if (!(conn_policy_mask & (1 << type))) {
-			return IFW_OPERATION_PASS;
-		}
-		break;
-	case DC:
-		if (!(dc_policy_mask & (1 << type))) {
-			return IFW_OPERATION_PASS;
-		}
-		break;
-	case SPI:
-		if (!(spi_policy_mask & (1 << type))) {
-			return IFW_OPERATION_PASS;
-		}
-		break;
-	case HCI:
-		if (!(hci_policy_mask & (1 << type))) {
-			return IFW_OPERATION_PASS;
-		}
-		break;
-	}
+	// switch (class) {
+	// case CORE:
+	// 	if (!(core_policy_mask & (1 << type))) {
+	// 		return IFW_OPERATION_PASS;
+	// 	}
+	// 	break;
+	// case SHARED:
+	// 	if (!(shared_policy_mask & (1 << type))) {
+	// 		return IFW_OPERATION_PASS;
+	// 	}
+	// 	break;
+	// case CONN:
+	// 	if (!(conn_policy_mask & (1 << type))) {
+	// 		return IFW_OPERATION_PASS;
+	// 	}
+	// 	break;
+	// case DC:
+	// 	if (!(dc_policy_mask & (1 << type))) {
+	// 		return IFW_OPERATION_PASS;
+	// 	}
+	// 	break;
+	// case SPI:
+	// 	if (!(spi_policy_mask & (1 << type))) {
+	// 		return IFW_OPERATION_PASS;
+	// 	}
+	// 	break;
+	// case HCI:
+	// 	if (!(hci_policy_mask & (1 << type))) {
+	// 		return IFW_OPERATION_PASS;
+	// 	}
+	// 	break;
+	// }
 
 	struct fsm_policy_list *policy = policy_manager.policy[class][type];
 

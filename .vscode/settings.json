@@ -31,7 +31,26 @@
         "ble_ll_priv.h": "c",
         "util.h": "c",
         "key_entropy_downgrade.h": "c",
-        "ble_ll_adv.h": "c"
+        "ble_ll_adv.h": "c",
+        "conn_internal.h": "c",
+        "types.h": "c",
+        "ccm.h": "c",
+        "memq.h": "c",
+        "lll.h": "c",
+        "lll_conn.h": "c",
+        "pdu.h": "c",
+        "ull_conn_types.h": "c",
+        "kernel.h": "c",
+        "slist.h": "c",
+        "l2cap.h": "c",
+        "addr.h": "c",
+        "buf.h": "c",
+        "smp.h": "c",
+        "keys.h": "c",
+        "ull_conn.h": "c",
+        "errno.h": "c",
+        "l2cap_internal.h": "c",
+        "device.h": "c"
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"

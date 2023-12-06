@@ -52,6 +52,11 @@ void ifw_fsm_init()
         curFSMState.hci_param[i] = 0;
     }
 
+    if (ifw_fcb_init())
+    {
+        MODLOG_DFLT(INFO, "IFW FCB init failed.");
+        return;
+    }
     // IFW_DEBUG_LOG("FSM core init success.");
 }
 
