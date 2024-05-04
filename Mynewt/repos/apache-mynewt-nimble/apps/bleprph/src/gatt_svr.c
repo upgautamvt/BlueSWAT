@@ -66,6 +66,20 @@ static const ble_uuid128_t gatt_svr_chr_ifw_policy_update_uuid =
 
 static uint8_t gatt_svr_sec_test_static_val;
 
+// IFW below
+
+struct ifw_policy
+{
+    uint8_t policy_len;
+    uint8_t index_len;
+    uint8_t type;
+    uint8_t class;
+    const void *policy;
+    const unsigned char *index;
+};
+
+// IFW above
+
 static int
 gatt_svr_chr_access_sec_test(uint16_t conn_handle, uint16_t attr_handle,
                              struct ble_gatt_access_ctxt *ctxt,
@@ -105,7 +119,7 @@ static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
                                                            /*** Characteristic: Policy update. */
                                                            .uuid = &gatt_svr_chr_ifw_policy_update_uuid.u,
                                                            .access_cb = gatt_svr_chr_ifw_policy_update,
-                                                           .flags = BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_READ_ENC,
+                                                           .flags = BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_READ_ENC | BLE_GATT_CHR_F_WRITE | BLE_GATT_CHR_F_WRITE_ENC,
                                                        },
                                                        {
                                                            0, /* No more characteristics in this service. */

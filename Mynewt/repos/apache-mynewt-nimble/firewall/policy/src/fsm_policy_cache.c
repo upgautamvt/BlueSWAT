@@ -162,7 +162,38 @@ void register_policy(int class, int type, int pid)
     }
 }
 
-void remove_policy(int class, int type, int pid) {}
+void remove_policy(int class, int type, int pid)
+{
+    struct fsm_policy_list *policy =
+        ebpf_malloc(sizeof(struct fsm_policy_list));
+
+    policy = policy_manager.policy[class][type];
+    if (policy == NULL)
+    {
+        return;
+    }
+
+    if (policy->index == pid)
+    {
+        policy_manager.policy[class][type] = policy->policy_next;
+        my_os_free(policy);
+        return;
+    }
+
+    while (policy->policy_next != NULL)
+    {
+        if (policy->policy_next->index == pid)
+        {
+            struct fsm_policy_list *tmp = policy->policy_next;
+            policy->policy_next = policy->policy_next->policy_next;
+            my_os_free(tmp);
+            break;
+        }
+        policy = policy->policy_next;
+    }
+
+    return;
+}
 
 ebpf_vm *g_vm = NULL, *g_jit_vm = NULL;
 
