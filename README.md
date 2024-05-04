@@ -15,8 +15,9 @@ git clone --recursive https://github.com/RayCxggg/BlueSWAT_BLE.git
 
 In a Windows shell, connect the board and attach it to WSL2:
 ```
-usbipd wsl list 
-usbipd wsl attach --busid <busid> 
+usbipd list 
+usbipd bind --busid <busid>
+usbipd attach --wsl --busid <busid>
 ```
 
 ## Zephyr BLE stack
