@@ -4,7 +4,7 @@ This repository contains the artifact for BlueSWAT, a Bluetooth security framewo
 
 ## Environment Setup
 
-BlueSWAT is tested under Ubuntu 20.04 on WSL2. This artifact contains implementation on two embedded OS with open-source BLE stacks, i.e. [ZephyrOS](https://zephyrproject.org/) and [MynewtOS](https://mynewt.apache.org/). All the experiments are carried out on Nordic 52840 Development Kit.
+BlueSWAT is tested under Ubuntu 20.04 on WSL2. This artifact contains implementation on two embedded OS with open-source BLE stacks, i.e., [ZephyrOS](https://zephyrproject.org/) and [MynewtOS](https://mynewt.apache.org/). This artifact is tested on the Nordic 52840 Development Kit.
 
 To flash USB device from WSL2, please install [usbipd](https://learn.microsoft.com/en-us/windows/wsl/connect-usb). Besides, Install the [Segger JLINK Software and documentation pack](https://www.segger.com/downloads/jlink/). 
 

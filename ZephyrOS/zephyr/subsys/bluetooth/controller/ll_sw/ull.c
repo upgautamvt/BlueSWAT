@@ -1595,9 +1595,6 @@ while (link)
 	{
 		// IFW below
 		if (IFW_LL_PACKET_PARSER(link, rx)) {
-			// IFW_DEBUG_LOG_CHECK_FAILURE("Packet drop.");
-			// ll_rx_put(link, rx);
-			// ll_rx_sched();
 			return 0;
 		}
 
