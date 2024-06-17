@@ -1,6 +1,6 @@
 # BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy
 
-This repository contains the artifact for BlueSWAT, a Bluetooth security framework for IoT devices based on eBPF. For more information about BlueSWAt, please consult our paper "BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy" (Published in CCS 2024).
+This repository contains the artifact for BlueSWAT, a Bluetooth security framework for IoT devices based on eBPF. For more information about BlueSWAT, please consult our paper "BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy" (Published in CCS 2024).
 
 ## Environment Setup
 
