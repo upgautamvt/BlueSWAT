@@ -114,7 +114,7 @@ sudo minicom -D /dev/ttyACM0
 
 ## Reference
 
-If you are interested in using our works for academic research, please cite the papers:
+If you are interested in using our works for academic research, please cite the paper:
 
 ```
 @article{che2024blueswat,
