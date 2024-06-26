@@ -111,3 +111,16 @@ You can use minicom to monitor the output:
 ```
 sudo minicom -D /dev/ttyACM0
 ```
+
+## Reference
+
+If you are interested in using our works for academic research, please cite the papers:
+
+```
+@article{che2024blueswat,
+  title={BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy},
+  author={Che, Xijia and He, Yi and Feng, Xuewei and Sun, Kun and Xu, Ke and Li, Qi},
+  journal={arXiv preprint arXiv:2405.17987},
+  year={2024}
+}
+```
