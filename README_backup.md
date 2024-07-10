@@ -2,33 +2,13 @@
 
 This repository contains the artifact for BlueSWAT, a Bluetooth security framework for IoT devices based on eBPF. For more information about BlueSWAT, please consult our paper "BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy" (To appear in CCS 2024).
 
-## Table for Artifact Evaluation
-
-0. Requirements.
-1. Environment Setup for ZephyrOS and Nordic 52840 Development Kit.
-2. Evaluate defense capability artifact.
-3. Evaluate memory consumption artifact.
-4. Evaluate runtime latency artifact.
-5. Evaluate power assess artifact.
-
-## Requirements
-
-Software
-- Ubuntu 20.04 or WSL2.
-- Segger JLINK.
-- Mobile BLE apps, e.g., nRF Connect, BLEscanner.
-
-Hardware
-- Nordic 52840 Development Kit.
-- Nordic 52840 Dongle.
-
 ## Environment Setup
 
 BlueSWAT is tested under Ubuntu 20.04 on WSL2. This artifact contains implementation on two embedded OS with open-source BLE stacks, i.e., [ZephyrOS](https://zephyrproject.org/) and [MynewtOS](https://mynewt.apache.org/). This artifact is tested on the Nordic 52840 Development Kit.
 
 To flash USB device from WSL2, please install [usbipd](https://learn.microsoft.com/en-us/windows/wsl/connect-usb). Besides, Install the [Segger JLINK Software and documentation pack](https://www.segger.com/downloads/jlink/). 
 
-Download the source code and required submodules of MynewtOS:
+Download our code and required submodules of MynewtOS:
 ```
 git clone --recursive https://github.com/RayCxggg/BlueSWAT-Artifact.git
 ```
@@ -40,7 +20,11 @@ usbipd bind --busid <busid>
 usbipd attach --wsl --busid <busid>
 ```
 
-### Setup Zephyr BLE stack
+## Zephyr BLE stack
+
+We are using ZephyrOS v2.2.0 for vulnerability reproduction.
+
+### Setup
 
 Please follow STEP ONE and TWO in the [doc](https://docs.zephyrproject.org/2.2.0/getting_started/index.html) to install dependencies.
 
@@ -91,5 +75,52 @@ You can use minicom to monitor the output:
 sudo minicom -D /dev/ttyACM0
 ```
 
-## Evaluate defense capability artifact
 
+## Mynewt NimBLE stack
+
+### Setup
+
+Follow the [doc](https://mynewt.apache.org/latest/get_started/index.html) native installation mode to install the dependencies.
+
+### Build and Flash
+
+Now, build the bootloader and BLE targets:
+
+```
+cd BlueSWAT/Mynewt
+newt build nrf52_boot
+newt build peripheral
+```
+
+Run the `newt create-image` command to create and sign the application image. You may assign an arbitrary version (e.g. 1.0.0) to the image:
+```
+newt create-image peripheral 1.0.0
+```
+
+Connect a micro-USB cable from your computer to the micro-USB port on the nRF52-DK board. 
+
+Then, load the bootloader and the BLE application image onto the board:
+```
+newt load nrf52_boot
+newt load peripheral
+```
+
+### Monitor
+
+You can use minicom to monitor the output:
+```
+sudo minicom -D /dev/ttyACM0
+```
+
+## Reference
+
+If you are interested in using our works for academic research, please cite the paper:
+
+```
+@article{che2024blueswat,
+  title={BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy},
+  author={Che, Xijia and He, Yi and Feng, Xuewei and Sun, Kun and Xu, Ke and Li, Qi},
+  journal={arXiv preprint arXiv:2405.17987},
+  year={2024}
+}
+```

@@ -14,14 +14,14 @@
 // import policy eBPF bytecode
 #include "ebpf_bytecode/conn_chan_map.h"
 #include "ebpf_bytecode/conn_chan_hop.h"
-#include "ebpf_bytecode/dc_nesn.h"
-#include "ebpf_bytecode/spi_evt_len.h"
-#include "ebpf_bytecode/spi_acl_len.h"
-#include "ebpf_bytecode/scan_rsp_len.h"
-#include "ebpf_bytecode/llcp_len_req.h"
-#include "ebpf_bytecode/llcp_conn_param_req.h"
-#include "ebpf_bytecode/lll_interval.h"
-#include "ebpf_bytecode/smp_ident_check.h"
+// #include "ebpf_bytecode/dc_nesn.h"
+// #include "ebpf_bytecode/spi_evt_len.h"
+// #include "ebpf_bytecode/spi_acl_len.h"
+// #include "ebpf_bytecode/scan_rsp_len.h"
+// #include "ebpf_bytecode/llcp_len_req.h"
+// #include "ebpf_bytecode/llcp_conn_param_req.h"
+// #include "ebpf_bytecode/lll_interval.h"
+// #include "ebpf_bytecode/smp_ident_check.h"
 
 uint32_t core_policy_mask = 0;
 uint32_t shared_policy_mask = 0;
@@ -49,7 +49,7 @@ struct policy_cache policy_arr[PID_NUM] = { 0 };
 void load_all_policies()
 {
 	ADD_POLICY(conn_chan_map, CONN, CHANNEL_MAP);
-	// ADD_POLICY(conn_chan_hop, CONN, CHANNEL_HOP);
+	ADD_POLICY(conn_chan_hop, CONN, CHANNEL_HOP);
 	// ADD_POLICY(dc_nesn, DC, NESN);
 	// ADD_POLICY(spi_acl_len, SPI, HCI_ACL_LEN);
 	// ADD_POLICY(spi_evt_len, SPI, HCI_EVT_LEN);
