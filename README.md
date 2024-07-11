@@ -19,19 +19,19 @@ Software
 - A mobile BLE app, e.g., nRF Connect, BLEscanner.
 
 Hardware
-- Nordic 52840 Development Kit.
-- Nordic 52840 Dongle.
+- *Victim*: Nordic 52840 Development Kit.
+- *Attacker*: Nordic 52840 Dongle.
 - A power assess tool, e.g., ChargerLAB POWER-Z KT002.
 
 ## 1. Environment Setup
 
-BlueSWAT is tested under Ubuntu 20.04 on WSL2. This artifact contains implementation on two embedded OS with open-source BLE stacks, i.e., [ZephyrOS](https://zephyrproject.org/) and [MynewtOS](https://mynewt.apache.org/). This artifact is tested on the Nordic 52840 Development Kit.
+BlueSWAT is tested under Ubuntu 20.04 on WSL2. This artifact contains implementation on two embedded OS with open-source BLE stacks, i.e., [ZephyrOS](https://zephyrproject.org/) and [MynewtOS](https://mynewt.apache.org/). For artifact evaluation, we introduce the testing procedure for ZephyrOS.
 
-To flash USB device from WSL2, please install [usbipd](https://learn.microsoft.com/en-us/windows/wsl/connect-usb). Besides, Install the [Segger JLINK Software and documentation pack](https://www.segger.com/downloads/jlink/). 
+To flash USB device from WSL2, please install [usbipd](https://learn.microsoft.com/en-us/windows/wsl/connect-usb). Besides, install the [Segger JLINK Software and documentation pack](https://www.segger.com/downloads/jlink/). 
 
-Download the source code and required submodules of MynewtOS:
+Download the source code:
 ```
-git clone --recursive https://github.com/RayCxggg/BlueSWAT-Artifact.git
+git clone https://github.com/RayCxggg/BlueSWAT.git
 ```
 
 In a Windows shell, connect the board and attach it to WSL2:
@@ -45,7 +45,7 @@ usbipd attach --wsl --busid <busid>
 
 Please follow STEP ONE and TWO in the [doc](https://docs.zephyrproject.org/2.2.0/getting_started/index.html) to install dependencies.
 
-Install needed Python packages:
+Install required Python packages:
 ```
 pip3 install --user -r ~/BlueSWAT/ZephyrOS/zephyr/scripts/requirements.txt
 ```
@@ -91,7 +91,7 @@ After flashing the firmware, press the RESET button on the board and you should 
 
 ### Monitor
 
-You can use minicom to monitor the output:
+You can use minicom to monitor the output in WSL:
 ```
 sudo minicom -D /dev/ttyACM0
 ```
@@ -104,9 +104,9 @@ We use the nRF52840 dongle as the adversary. Follow [SweynTooth](https://github.
 
 ### Victim
 
-We integrat BlueSWAT with Zephyr and use the nRF52840 DK as the victim device.
+We integrate BlueSWAT with ZephyrOS and use the nRF52840 DK as the victim device.
 
-BlueSWAT inspection rules are at `ZephyrOS/zephyr/firewall/policy/ebpf_C_code`. To compile them into eBPF programs, e.g., to compile `conn_chan_map.ebpf.c`, run `./compile.sh conn_chan_map`. We have provided some eBPF transition rules at `ZephyrOS/zephyr/firewall/policy/ebpf_bytecode`.
+BlueSWAT inspection rules are at `ZephyrOS/zephyr/firewall/policy/ebpf_C_code`. To compile them into eBPF programs, e.g., to compile `conn_chan_map.ebpf.c`, run `./compile.sh conn_chan_map`. We have provided some compiled eBPF transition rules at `ZephyrOS/zephyr/firewall/policy/ebpf_bytecode`.
 
 1. Test the vulnerability without BlueSWAT. 
 
@@ -198,8 +198,8 @@ Mobile BLE apps can connect to our device and access these applications. The eva
 2. Load one and ten rules and activate the HRS for 100 rounds. Record the time comsumption.
 3. Calculate the runtime latency introduced by BlueSWAT.
 
-## 5. Power assess.
+## 5. Power assess
 
 We access the power and energy performance of BlueSWAT over a 120-second window, encompassing four phases: 20s of connection, 40s of BAS, another 20s of connection, and 40s of HRS.
 
-ChargerLAB POWER-Z KT002 can record the Voltage, Current, and Power values during the testing window, and we can compare the power increase introduced by BlueSWAT with baseline.
+We use ChargerLAB POWER-Z KT002 can record the Voltage, Current, and Power values during the testing window, and then compare the power increase introduced by BlueSWAT with baseline.
