@@ -188,3 +188,14 @@ void load_all_policies()
 Recompile the firmware and check the size of ten eBPF programs.
 
 ## 4. Runtime latency
+
+Our artifact provides two BLE applications, which are *Battery Level Service (BAS)* and *Heart Rate Service (HRS)*.
+
+Mobile BLE apps can connect to our device and access these applications. The evaluation process is similar to the above:
+
+1. Load no rules and activate the HRS for 100 rounds. Record the time comsumption.
+2. Load one and ten rules and activate the HRS for 100 rounds. Record the time comsumption.
+3. Calculate the runtime latency introduced by BlueSWAT.
+
+## 5. Power assess.
+
