@@ -21,6 +21,7 @@ Software
 Hardware
 - Nordic 52840 Development Kit.
 - Nordic 52840 Dongle.
+- A power assess tool, e.g., ChargerLAB POWER-Z KT002.
 
 ## 1. Environment Setup
 
@@ -199,3 +200,6 @@ Mobile BLE apps can connect to our device and access these applications. The eva
 
 ## 5. Power assess.
 
+We access the power and energy performance of BlueSWAT over a 120-second window, encompassing four phases: 20s of connection, 40s of BAS, another 20s of connection, and 40s of HRS.
+
+ChargerLAB POWER-Z KT002 can record the Voltage, Current, and Power values during the testing window, and we can compare the power increase introduced by BlueSWAT with baseline.
