@@ -1,15 +1,15 @@
 # BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy
 
-This repository contains the artifact for BlueSWAT, a Bluetooth security framework for IoT devices based on eBPF. For more information about BlueSWAT, please consult our paper "BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy" (To appear in CCS 2024).
+This repository contains the artifact for BlueSWAT, a Bluetooth security framework for IoT devices based on eBPF. For more information about BlueSWAT, please check out our paper "BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy" (To appear in CCS 2024).
 
 ## Table for Artifact Evaluation
 
 0. Requirements.
-1. Environment Setup for ZephyrOS and Nordic 52840 Development Kit.
-2. Evaluate defense capability artifact.
-3. Evaluate memory consumption artifact.
-4. Evaluate runtime latency artifact.
-5. Evaluate power assess artifact.
+1. Set up ZephyrOS and Nordic 52840 Development Kit.
+2. Defense capability.
+3. Memory consumption.
+4. Runtime latency.
+5. Power assess.
 
 ## Requirements
 
@@ -40,7 +40,7 @@ usbipd bind --busid <busid>
 usbipd attach --wsl --busid <busid>
 ```
 
-### Setup Zephyr BLE stack
+### Set up Zephyr BLE stack
 
 Please follow STEP ONE and TWO in the [doc](https://docs.zephyrproject.org/2.2.0/getting_started/index.html) to install dependencies.
 
@@ -70,6 +70,8 @@ cd BlueSWAT/ZephyrOS/zephyr
 source zephyr-env.sh
 ```
 
+BlueSWAT is added a subsystem of the kernel and locates at `ZephyrOS/zephyr/firewall`.
+
 ### Build and Flash
 
 Now, we build the BLE peripheral application for Nordic 52840 DK:
@@ -91,5 +93,40 @@ You can use minicom to monitor the output:
 sudo minicom -D /dev/ttyACM0
 ```
 
-## Evaluate defense capability artifact
+## Defense capability 
 
+### Adversary
+
+We use the nRF52840 dongle as the adversary. Follow [SweynTooth](https://github.com/Matheus-Garbelini/sweyntooth_bluetooth_low_energy_attack) to install the firmware. 
+
+### Victim
+
+We integrat BlueWAT with Zephyr and use nRF52840 DK as the victim device.
+
+BlueSWAT inspection rules are at `ZephyrOS/zephyr/firewall/policy/ebpf_C_code`. To compile them into eBPF programs, e.g., to compile `conn_chan_map.ebpf.c`, run `./compile.sh conn_chan_map`. We have provided some eBPF transition rules at `ZephyrOS/zephyr/firewall/policy/ebpf_bytecode`.
+
+1. Test the vulnerability without BlueSWAT. After flash the ZephyrOS to the board, use SweynTooth *Invalid Channel Map* to launch the attack. 
+
+The *Invalid Channel Map* attack will trigger a kernel panic and crash the device.
+
+2. Load the defense rules into BlueSWAT and relaunch the attacks. In `ZephyrOS/zephyr/firewall/policy/include/fsm_policy_cache.h`, add 
+```
+enum fsm_policy_tag {
+	PID_conn_chan_map,
+
+	// FSM policy num
+	PID_NUM,
+};
+```
+
+In `ZephyrOS/zephyr/firewall/policy/src/fsm_policy_cache.c`, add
+```
+#include "ebpf_bytecode/conn_chan_map.h"
+
+void load_all_policies()
+{
+	ADD_POLICY(conn_chan_map, CONN, CHANNEL_MAP);
+}
+```
+
+Recompile the firmware and flash the nRF52840 DK board. Then, relaunch the attack with the dongle and the victim device should successfully mitigate the attack.
