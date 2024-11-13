@@ -42,12 +42,6 @@ chmod +x zephyr-sdk-0.11.2-setup.run
 rm zephyr-sdk-0.11.2-setup.run
 ```
 
-Clone required remote repositories:
-```
-cd BlueSWAT/ZephyrOS/zephyr
-west update
-```
-
 Set build environment variables:
 ```
 cd BlueSWAT/ZephyrOS/zephyr
