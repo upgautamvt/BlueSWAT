@@ -106,6 +106,15 @@ You can use minicom to monitor the output:
 sudo minicom -D /dev/ttyACM0
 ```
 
+## A Testing Case
+
+Here we use CVE-2020-10069 as a testing case. 
+
+We use an nRF52840 dongle with Sweyntooth to reproduce the attack. Follow the [doc](https://github.com/Matheus-Garbelini/sweyntooth_bluetooth_low_energy_attacks) to build and flash sweyntooth firmware to the dongle, then launch the **Invalid Channel Map** attack to the victim (i.e. the nRF52840 DK). 
+
+With the original vulnerable Zephyr v2.2.0 BLE stack, the stack will crash after we launch the attack. With BlueSWAT, the attacking packets will be detected and dropped.
+
+
 ## Reference
 
 If you are interested in using our works for academic research, please cite the paper:
