@@ -8,7 +8,7 @@
 // #define POLICY_ID(name) PID_##name
 
 enum fsm_policy_tag {
-	// PID_conn_chan_map,
+	PID_conn_chan_map,
 	// PID_conn_chan_hop,
 	// PID_ebpf_helper_test,
 	// PID_dc_nesn,
