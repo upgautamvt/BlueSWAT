@@ -1595,8 +1595,9 @@ while (link)
 	{
 		// IFW below
 		if (IFW_LL_PACKET_PARSER(link, rx)) {
-			return 0;
+			rx->type = NODE_RX_TYPE_DC_PDU_RELEASE;
 		}
+		// IFW above
 
 		/* Demux Rx objects */
 		switch (rx->type) {
@@ -1610,10 +1611,6 @@ while (link)
 			// rx->type is CONNECTION, should still be using advertising channel pdu
 
 			memq_dequeue(memq_ull_rx.tail, &memq_ull_rx.head, NULL);
-
-			// IFW below
-			// IFW_DEBUG_LOG("Invoke ull_conn_setup here.");
-			// IFW above
 
 			// core function to parse RX adv channel packets
 			ull_conn_setup(link, rx);
@@ -1672,19 +1669,6 @@ while (link)
 		case NODE_RX_TYPE_SCAN_INDICATION:
 #endif /* CONFIG_BT_CTLR_SCAN_INDICATION */
 
-			// IFW below
-			// add new case according to:https://github.com/zephyrproject-rtos/
-			// zephyr/blob/de9579f2974301f67cccb25408c846a0ef6b8a31/subsys/bluetooth/controller/ll_sw/ull.c#L2896
-		case NODE_RX_TYPE_DC_PDU_RELEASE:
-			// IFW above
-
-			{
-				(void)memq_dequeue(memq_ull_rx.tail,
-						   &memq_ull_rx.head, NULL);
-				ll_rx_put(link, rx);
-				ll_rx_sched();
-			}
-			break;
 #endif /* CONFIG_BT_OBSERVER ||
 	* CONFIG_BT_CTLR_SCAN_REQ_NOTIFY ||
 	* CONFIG_BT_CTLR_PROFILE_ISR ||
@@ -1692,6 +1676,18 @@ while (link)
 	* CONFIG_BT_CTLR_SCAN_INDICATION ||
 	* CONFIG_BT_CONN
 	*/
+			// IFW below
+			// add new case according to:https://github.com/zephyrproject-rtos/
+			// zephyr/blob/de9579f2974301f67cccb25408c846a0ef6b8a31/subsys/bluetooth/controller/ll_sw/ull.c#L2896
+		case NODE_RX_TYPE_DC_PDU_RELEASE:
+			// IFW above
+			{
+				(void)memq_dequeue(memq_ull_rx.tail,
+						   &memq_ull_rx.head, NULL);
+				ll_rx_put(link, rx);
+				ll_rx_sched();
+			}
+			break;
 
 		default: {
 #if defined(CONFIG_BT_CTLR_USER_EXT)

@@ -339,7 +339,7 @@ void main(void)
 
     // IFW below
     // enable IoT firewall Finite State Machine
-    ifw_fsm_enable(JIT_ON);
+    ifw_fsm_enable(JIT_OFF);
 
     // run test
     // test_local_conn_chan_hop();

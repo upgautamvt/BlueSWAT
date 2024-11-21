@@ -6,6 +6,7 @@
 #include "utils.h"
 
 static bool result = 0;
+// int i = 0;
 
 static inline void ifw_conn_setup(memq_link_t *link, struct node_rx_hdr *rx);
 static inline void ifw_peripheral_setup(memq_link_t *link,
@@ -33,7 +34,6 @@ bool ifw_ll_packet_parser_rx(memq_link_t *link, struct node_rx_hdr *rx)
 	case NODE_RX_TYPE_CONNECTION:
 		// rx is Adv Channel Packet
 
-		// IFW_DEBUG_LOG();
 		ifw_conn_setup(link, rx);
 
 		break;
@@ -47,6 +47,11 @@ bool ifw_ll_packet_parser_rx(memq_link_t *link, struct node_rx_hdr *rx)
 
 		// default:
 		// DEBUG_LOG("No state to update.");
+	}
+
+	if (result == IFW_OPERATION_REJECT) {
+		IFW_DEBUG_LOG("Malicious packets detected!");
+		IFW_DEBUG_LOG("Connection terminated by BlueSWAT.");
 	}
 
 	return result;
@@ -108,10 +113,15 @@ static inline void ifw_peripheral_setup(memq_link_t *link,
 
 	lll->data_chan_count = ifw_count_one(&lll->data_chan_map[0]);
 
+	// if (i == 1000) {
+	// 	lll->data_chan_count = 50;
+	// }
+
 	IFW_FSM_CHECK_UPDATE(lll->data_chan_count, CHANNEL_MAP, CONN);
 
 	if (IFW_RUN_VERIFIER(CHANNEL_MAP, CONN)) {
 		result = IFW_OPERATION_REJECT;
+		IFW_DEBUG_LOG("IFW_OPERATION_REJECT.");
 		return;
 	}
 
@@ -132,6 +142,8 @@ static inline void ifw_peripheral_setup(memq_link_t *link,
 		result = IFW_OPERATION_REJECT;
 		return;
 	}
+
+	// i++;
 }
 
 static inline void ifw_central_setup(memq_link_t *link, struct node_rx_hdr *rx,
@@ -214,8 +226,6 @@ static inline void ifw_ctrl_rx(memq_link_t *link, struct node_rx_pdu **rx,
 		break;
 
 	case PDU_DATA_LLCTRL_TYPE_CONN_PARAM_REQ:
-
-		// // IFW_DEBUG_LOG();
 
 		if (conn->lll.role) {
 			IFW_FSM_CHECK_UPDATE(conn->llcp_conn_param.req,

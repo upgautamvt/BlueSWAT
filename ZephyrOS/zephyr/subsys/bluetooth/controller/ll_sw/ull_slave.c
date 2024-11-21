@@ -84,11 +84,17 @@ void ull_slave_setup(memq_link_t *link, struct node_rx_hdr *rx,
 	lll->data_chan_count = util_ones_count_get(&lll->data_chan_map[0],
 						   sizeof(lll->data_chan_map));
 
+	// OFFICIAL PATCH
+	// if (lll->data_chan_count < 2) {
+	// 	IFW_DEBUG_LOG("Official patch triggered.");
+	// 	return;
+	// }
+	// ABOVE
+
 	lll->data_chan_hop = pdu_adv->connect_ind.hop;
 
 	// IFW below
 
-	// official patch
 	// IFW TODO: complete IFW_INVALID_RELEASE function, make the device
 	//  advertise after drop the malicious packet
 	// if (lll->data_chan_count < 2) {
@@ -96,7 +102,6 @@ void ull_slave_setup(memq_link_t *link, struct node_rx_hdr *rx,
 	// 	return;
 	// }
 
-	// official patch
 	// if ((lll->data_chan_hop < 5) || (lll->data_chan_hop > 16)) {
 	// 	IFW_INVALID_RELEASE(&adv->ull, lll, link, rx);
 	// 	return;
