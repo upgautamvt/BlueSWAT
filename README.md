@@ -1,6 +1,6 @@
 # BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy
 
-This repository contains the artifact for BlueSWAT, a Bluetooth security framework for IoT devices based on eBPF. For more information about BlueSWAT, please consult our paper "BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy" (To appear in CCS 2024).
+This repository contains the artifact for BlueSWAT, a Bluetooth security framework for IoT devices based on eBPF. For details, please check out the paper _BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy_ [here](https://dl.acm.org/doi/abs/10.1145/3658644.3670397) (ACM CCS 2024).
 
 ## Environment Setup
 
@@ -120,10 +120,19 @@ With the original vulnerable Zephyr v2.2.0 BLE stack, the stack will crash after
 If you are interested in using our works for academic research, please cite the paper:
 
 ```
-@article{che2024blueswat,
-  title={BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy},
-  author={Che, Xijia and He, Yi and Feng, Xuewei and Sun, Kun and Xu, Ke and Li, Qi},
-  journal={arXiv preprint arXiv:2405.17987},
-  year={2024}
+@inproceedings{10.1145/3658644.3670397,
+author = {Che, Xijia and He, Yi and Feng, Xuewei and Sun, Kun and Xu, Ke and Li, Qi},
+title = {BlueSWAT: A Lightweight State-Aware Security Framework for Bluetooth Low Energy},
+year = {2024},
+isbn = {9798400706363},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3658644.3670397},
+doi = {10.1145/3658644.3670397},
+pages = {2087–2101},
+numpages = {15},
+keywords = {EBPF, bluetooth low energy, cross-platform defense, state-aware security},
+location = {Salt Lake City, UT, USA},
+series = {CCS '24}
 }
 ```
