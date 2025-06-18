@@ -1,0 +1,13 @@
+# Lines added by author
+#
+
+pkg.name: "apps/ble_app"
+pkg.description: "Description of your app"
+pkg.author: "You <you@you.org>"
+pkg.homepage: "http://your-url.org/"
+    - "@apache-mynewt-core/sys/console/full"
+    - "@apache-mynewt-core/sys/log/full"
+    - "@apache-mynewt-core/sys/stats/full"
+    - "@apache-mynewt-nimble/nimble/host"
+    - "@apache-mynewt-nimble/nimble/host/store/config"
+    - "@apache-mynewt-nimble/nimble/transport"

@@ -1,4 +1,0 @@
-pkg.name: firewall/policy/specification
-pkg.description: Specifications of the BlueSWAT eBPF firewall.
-
-pkg.deps:

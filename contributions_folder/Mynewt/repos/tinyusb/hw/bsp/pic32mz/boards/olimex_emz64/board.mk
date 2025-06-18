@@ -1,0 +1,6 @@
+# Lines added by author
+JLINK_DEVICE=PIC32MZ2048EFH064
+JLINK_IF=ICSP
+
+CFLAGS += \
+  -mprocessor=32MZ2048EFH064 \

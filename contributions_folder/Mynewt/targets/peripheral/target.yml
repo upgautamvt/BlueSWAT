@@ -1,0 +1,3 @@
+# Lines added by author
+target.app: "apps/bleprph"
+target.app: "@apache-mynewt-nimble/apps/bleprph"

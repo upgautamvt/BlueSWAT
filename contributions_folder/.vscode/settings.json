@@ -1,0 +1,12 @@
+# Lines added by author
+        "ble_ll_adv.h": "c"
+        "key_entropy_downgrade.h": "c"
+        "util.h": "c"
+        "string.h": "c"
+        "conn_chan_map.h": "c"
+        "stdlib.h": "c"
+        "fsm_policy_cache.h": "c"
+        "os_callout.h": "c"
+        "*.ipp": "cpp"
+        "ble_ll_sync.h": "c"
+    }

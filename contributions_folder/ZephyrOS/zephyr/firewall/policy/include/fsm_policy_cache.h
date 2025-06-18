@@ -1,0 +1,12 @@
+# Lines added by author
+	// PID_conn_chan_map,
+	PID_conn_chan_map,
+	PID_conn_chan_hop,
+	PID_dc_nesn,
+	PID_spi_acl_len,
+	PID_spi_evt_len,
+	PID_scan_rsp_len,
+	PID_llcp_len_req,
+	PID_llcp_conn_param_req,
+	PID_lll_interval,
+	PID_smp_ident_check,

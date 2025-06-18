@@ -1,0 +1,8 @@
+# Lines added by author
+[manifest]
+path = zephyr
+file = west.yml
+
+[zephyr]
+base = zephyr
+

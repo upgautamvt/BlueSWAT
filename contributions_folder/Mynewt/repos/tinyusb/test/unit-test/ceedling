@@ -1,0 +1,4 @@
+# Lines added by author
+#!/bin/bash
+
+ruby vendor/ceedling/bin/ceedling $*

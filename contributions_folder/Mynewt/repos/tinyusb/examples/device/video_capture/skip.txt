@@ -1,0 +1,4 @@
+# Lines added by author
+mcu:MSP430x5xx
+mcu:NUC121
+mcu:SAMD11

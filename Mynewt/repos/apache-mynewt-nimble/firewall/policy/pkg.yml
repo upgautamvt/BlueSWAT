@@ -1,8 +1,0 @@
-pkg.name: firewall/policy
-pkg.description: Security policy of the BlueSWAT eBPF firewall.
-
-pkg.deps:
-    - nimble
-    - firewall
-    - firewall/libebpf
-    - firewall/policy/specification

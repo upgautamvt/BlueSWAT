@@ -1,0 +1,4 @@
+# Lines added by author
+# pkg.cflags: 
+#     - '-Xlinker'
+#     - '-lg'

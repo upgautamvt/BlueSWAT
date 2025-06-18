@@ -1,0 +1,5 @@
+
+(venv) upgautam@amd:~/Downloads/BlueSWAT-Artifact$ python ./my_contribution_extractor.py . --author-name "RayCxggg" --author-email "chexj18@163.com" --out-patch all_my_changes.patch
+
+(venv) upgautam@amd:~/Downloads/BlueSWAT-Artifact$ python ./my_contribution_extractor2.py . --author-name "RayCxggg" --author-email "chexj18@163.com" --out-dir contributions_folder
+

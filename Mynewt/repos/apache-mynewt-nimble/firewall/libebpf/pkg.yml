@@ -1,6 +1,0 @@
-pkg.name: firewall/libebpf
-pkg.description: eBPF framework of the BlueSWAT.
-
-pkg.deps:
-    - nimble
-    - firewall/policy
