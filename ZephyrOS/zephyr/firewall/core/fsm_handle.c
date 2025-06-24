@@ -14,8 +14,14 @@ void ifw_fsm_enable(bool jit)
 {
 	load_all_policies();
 
+        //JIT related features
 	if (jit) {
+                //JIT Compiler needs to write and then execute memory, which
+                //conflicts with MPU protection. So, disable Memory Protection
 		disable_mpu_for_jit();
+		//JIT specific their firewall policies
+                // load_all_policies() already loads all the policies,
+                // set_all_policy_jit_on will modify jit related from them
 		set_all_policy_jit_on();
 	}
 

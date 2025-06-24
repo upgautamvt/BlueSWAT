@@ -1,0 +1,6 @@
+pkg.name: firewall
+pkg.description: BlueSWAT eBPF firewall model for NimBLE stack.
+
+pkg.deps:
+    - nimble
+    - firewall/policy

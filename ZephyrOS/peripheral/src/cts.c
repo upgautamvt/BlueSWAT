@@ -8,6 +8,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+The cts.c file implements a simple example of the Bluetooth Low Energy (BLE) Current Time Service (CTS) using the Zephyr RTOS. This service allows a BLE peripheral to expose the current time to a connected central device such as a phone or tablet. At the top of the file, several headers from Zephyr’s core, Bluetooth stack, and system utilities are included to provide the necessary types, macros, and functions.
+
+The service uses two global static variables: ct, a 10-byte array that stores the current time information in a specific format defined by the Bluetooth CTS specification; and ct_update, a flag used to indicate whether the time value has been updated and needs to be notified to the client. The time format stored in ct includes fields for year, month, day, hour, minute, second, day of the week, fractions of a second, and an adjustment reason, making it compliant with the Bluetooth specification for the "Exact Time 256" structure.
+
+The function read_ct allows a connected client to read the current time by copying data from ct into the response buffer using Zephyr's bt_gatt_attr_read. Meanwhile, write_ct permits a client to write new time data into the buffer. It validates the write by checking that the offset and length do not exceed the buffer’s size and sets the ct_update flag, which marks the time as changed and eligible for notification. There's also a function ct_ccc_cfg_changed that is meant to handle changes to the Client Characteristic Configuration descriptor (CCC), such as when a client enables or disables notifications, but in this code it's just a placeholder and does nothing yet.
+
+The actual BLE service is defined with BT_GATT_SERVICE_DEFINE, which registers a primary CTS service and its associated characteristic. The characteristic supports read, write, and notify operations and is backed by the ct buffer. Additionally, a CCC descriptor is defined so clients can subscribe to notifications when the time value changes.
+
+To populate the ct buffer, the function generate_current_time is used. It hardcodes a specific timestamp — year 2015, May 30th, 12:45:30 — along with day of the week, fractional seconds, and adjustment reason. This simulated time is set during initialization by the cts_init function.
+
+The cts_notify function is used to send notifications to clients but only if the ct_update flag is set, which happens when the client writes new time data. After notifying, the flag is cleared. This ensures notifications are only sent when there’s actually a change to report. The notification itself is sent using Zephyr’s bt_gatt_notify, targeting the correct attribute inside the CTS service definition.
+
+Overall, this file offers a minimal but complete implementation of a standard BLE service in Zephyr. While it uses a hardcoded time for simplicity, it correctly demonstrates how to define GATT services, characteristics, and descriptors; handle read/write requests; and push notifications to BLE clients. This structure can be extended by adding real-time clock integration or dynamically updating the time fields based on system state.
+**/
+
 #include <zephyr/types.h>
 #include <stddef.h>
 #include <string.h>

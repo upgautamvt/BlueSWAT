@@ -115,6 +115,7 @@ void register_policy(int class, int type, int pid)
 		break;
 	}
 
+        //first policy in this policy class
 	if (policy_manager.policy[class][type] == NULL) {
 		// add a new policy to manager
 		// IFW_DEBUG_LOG("Add a new policy to manager");
@@ -129,7 +130,7 @@ void register_policy(int class, int type, int pid)
 
 		policy_manager.policy[class][type] = new_policy;
 
-	} else {
+	} else { //append to existing policy list
 		// add new policy into list
 		// IFW_DEBUG_LOG("Add new policy into list.");
 
@@ -147,6 +148,8 @@ void register_policy(int class, int type, int pid)
 		policy->policy_next->index = pid;
 		policy->policy_next->policy_next = NULL;
 	}
+        // The actual execution of the policy happens later, on demand, in this function:
+        // int run_fsm_check_policy(int type, int class, void *newState)
 }
 
 ebpf_vm *g_vm = NULL, *g_jit_vm = NULL;

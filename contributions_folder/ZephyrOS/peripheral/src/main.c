@@ -2,46 +2,6 @@
     ifw_fsm_enable(JIT_ON);
 #include <device.h>
 #include <drivers/gpio.h>
-// #ifndef DT_ALIAS_LED0_GPIOS_FLAGS
-// #define FLAGS 0
-// #else
-// #define FLAGS DT_ALIAS_LED0_GPIOS_FLAGS
-// #endif
-
-// #ifdef DT_ALIAS_LED0_GPIOS_CONTROLLER
-// #define LED0 DT_ALIAS_LED0_GPIOS_CONTROLLER
-// #define PIN DT_ALIAS_LED0_GPIOS_PIN
-// #else
-// #error "Unsupported board: led0 devicetree alias is not defined"
-// #define LED0 ""
-// #define PIN 0
-// #endif
-
-// struct device *dev;
-// bool led_is_on = true;
-// void setup_led()
-// {
-//     int ret;
-//     dev = device_get_binding(LED0);
-//     if (dev == NULL)
-//     {
-//         printk("Failed to Init LED\n");
-//         return;
-//     }
-
-//     ret = gpio_pin_configure(dev, PIN, GPIO_OUTPUT_ACTIVE | FLAGS);
-//     if (ret < 0)
-//     {
-//         printk("Failed to SET LED GPIO\n");
-//         return;
-//     }
-// }
-
-// void led_blink()
-// {
-//     gpio_pin_set(dev, PIN, (int)led_is_on);
-//     led_is_on = !led_is_on;
-// }
 
 	0xf0, 0xde, 0xbc, 0x9a, 0x78, 0x56, 0x34, 0x12,
 	0x78, 0x56, 0x34, 0x12, 0x78, 0x56, 0x34, 0x12);
